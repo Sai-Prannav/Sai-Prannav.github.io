@@ -11,7 +11,11 @@ role: "Owned the ML: data-processing app, labeling app, detection model."
 status: Accepted, SciTech 2027
 stack: [LiDAR, Thermal imaging, Sensor fusion, Deep learning, Python]
 posters: [uavSensors, smarterSignals, pedestrian]
-cardSlot: posters/aero-uav-figure.png
+card:
+  kind: image
+  src: /media/posters/aero-uav-figure.png
+  alt: Thermal camera frame of a drone in the sky with a detection box labeled aircraft 0.75
+  caption: 'Thermal frame with a detection, from the poster "Evaluation of LiDAR, RGB, and Thermal Sensors for UAV Detection" (KSU Symposium of Student Scholars, Spring 2026). I''m a co-author.'
 did:
   - I built a data-processing application for the raw LiDAR data.
   - I built a data-labeling application.
