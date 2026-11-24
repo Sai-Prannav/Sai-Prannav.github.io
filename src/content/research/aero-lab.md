@@ -4,7 +4,8 @@ pi: Dr. Adeel Khalid
 role: Undergraduate Researcher, Counter-UAS Sensing
 period: Sep 2025 to May 2026
 order: 4
-summary: Sensing and detection research for counter-drone systems. I owned the machine learning on the SciTech paper.
+caseStudy: aero-uav-detection
+summary: Counter-drone sensing. I owned the ML on the SciTech paper.
 tags: [LiDAR, Thermal imaging, Deep learning]
 papers:
   - title: Multi-Modal Intruder UAV Detection and Tracking Using LiDAR and Thermal Imagery with Deep Learning
@@ -24,10 +25,7 @@ posters:
     position: 6th of 6 authors
     when: Fall 2025
     link: pedestrian
-slot:
-  title: Detection figure
-  need: One figure from a poster or from the paper once it's cleared. See VISUALS_NEEDED.md.
 ---
-The raw LiDAR data for the SciTech paper was unusable and unlabeled, so I wrote a data-processing application and a labeling application, then trained the deep-learning detection model. I'm not the presenter: Owais Ahmed is.
+The raw LiDAR data for the SciTech paper was unusable and unlabeled, so I built a data-processing app and a labeling app, then trained the detection model. That's the ML half of the paper, and it's mine. Owais Ahmed presents it, and I'm co-author.
 
-The signals poster predicts the SNR threshold for reliable direction-of-arrival estimation in UAV links, using MATLAB simulation and random matrix theory validated on LoRa, USRP and Raspberry Pi hardware. For the sensor poster, I ran controlled flight experiments comparing LiDAR, RGB and thermal detection across drone size, altitude and range.
+I'm also on the signals poster. It predicts the SNR threshold for reliable direction-of-arrival estimation in UAV links, using random matrix theory, and it's validated on LoRa, USRP and Raspberry Pi hardware. For the sensor poster I ran controlled flight experiments comparing LiDAR, RGB and thermal detection across drone size, altitude and range.

@@ -1,0 +1,37 @@
+---
+title: Window heat loss from infrared images
+summary: Estimating heat loss and gain through windows from thermal images. Accepted to TFEC 2027.
+context: Gurupatham Lab, KSU
+date: Sep 2026 to present
+order: 4
+featured: true
+kind: research
+disciplines: [Research, Software]
+role: Helped develop and test the algorithms, collected the data.
+status: Accepted, TFEC 2027
+stack: [Infrared thermography, Heat transfer, Machine learning]
+cardSlot: posters/tfec-window-figure.png
+did:
+  - I helped develop the algorithms.
+  - I helped test them.
+  - I collected the data.
+team:
+  - Kinza Molvi and Dr. Gurupatham are the other two authors. I'm co-author, 2nd of 3.
+specs:
+  - { k: Measurement, v: 'Infrared thermography of windows' }
+  - { k: ML part, v: 'Proposed segmentation workflow (Mask R-CNN / Detectron2)' }
+  - { k: Venue, v: 'TFEC 2027, 12th Thermal and Fluids Engineering Conference (ASTFE), Dallas' }
+  - { k: Authorship, v: 'Co-author, 2nd of 3' }
+credits: Gurupatham Lab, Kennesaw State University. PI Dr. Sathish Kumar Gurupatham.
+---
+## The problem
+
+An infrared camera shows a window leaking heat. Turning that picture into watts is the hard part, and it's what I worked on.
+
+## The approach
+
+The paper pairs a U-value sensitivity analysis with a proposed segmentation workflow for finding the window in the image. I helped develop and test the algorithms, and I collected the data.
+
+## Where it stands
+
+It's accepted to TFEC 2027 in Dallas, March. I'd call it a framework paper: the ML step is proposed, and we don't claim trained-model results. The lab's second accepted paper applies ML to estimating tumor blood perfusion during hyperthermia.

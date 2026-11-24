@@ -1,0 +1,145 @@
+---
+// Bistable "hair-clip" explainer. Model: E(x) = a (x^2 - 1)^2, a double well with wells at x = -1 and x = +1.
+// The static drawing below is the no-JS fallback (strip resting in shape B, ball in the right well).
+interface Props { compact?: boolean; prefix?: string; }
+const { compact = false, prefix = 'bi' } = Astro.props;
+const A = 1;
+const E = (x: number) => A * (x * x - 1) ** 2;
+const X = (x: number) => 180 + x * 95;
+const Y = (e: number) => 215 - e * 72;
+const curve = Array.from({ length: 65 }, (_, i) => { const x = -1.6 + (i * 3.2) / 64; return `${X(x).toFixed(1)},${Y(E(x)).toFixed(1)}`; }).join(' ');
+const strip = (u: number) => Array.from({ length: 41 }, (_, i) => { const s = i / 40; return `${(44 + 272 * s).toFixed(1)},${(160 - u * 70 * 0.5 * (1 - Math.cos(2 * Math.PI * s))).toFixed(1)}`; }).join(' ');
+---
+<figure data-bistable data-a={A} class:list={[compact && 'bi-compact']}>
+  <div class="bi-grid">
+    <div class="bi-panel">
+      <p class="mono bi-title">Strip between two pins</p>
+      <svg viewBox="0 0 360 250" role="img" aria-label="A buckled strip held between two pins. Dragging its midpoint up or down moves it between two stable shapes." class="bi-svg" data-el="strip-svg">
+        <defs><pattern id={`${prefix}-g`} width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#D9D5CB" /></pattern></defs>
+        <rect width="360" height="250" fill={`url(#${prefix}-g)`} />
+        <path d="M24 160H336" class="bi-axis" />
+        <polyline points={strip(1)} class="bi-ghost" /><polyline points={strip(-1)} class="bi-ghost" />
+        <text x="180" y="42" class="bi-lab" text-anchor="middle">stable shape B</text>
+        <text x="180" y="244" class="bi-lab" text-anchor="middle">stable shape A</text>
+        <polyline data-el="strip" points={strip(1)} class="bi-strip" />
+        <path d="M44 160l-8 14h16zM316 160l-8 14h16z" class="bi-pin" />
+        <g data-el="handle" transform={`translate(180 ${160 - 70})`}>
+          <circle r="26" fill="transparent" />
+          <circle r="11" class="bi-handle" />
+          <path d="M-4 -3l4 -4 4 4M-4 3l4 4 4 -4" class="bi-arrows" />
+        </g>
+      </svg>
+    </div>
+    <div class="bi-panel">
+      <p class="mono bi-title">E(x) = a(x² − 1)²</p>
+      <svg viewBox="0 0 360 250" role="img" aria-label="Double-well energy curve with a ball resting in the right well." class="bi-svg" data-el="e-svg">
+        <rect width="360" height="250" fill={`url(#${prefix}-g)`} />
+        <path d={`M${X(-1.6)} 215H${X(1.6)}`} class="bi-axis" />
+        <path d={`M${X(0)} 36V215`} class="bi-axis" style="stroke-dasharray:3 4" />
+        <path d={`M${X(-1.6)} ${Y(1)}H${X(1.6)}`} class="bi-barrier" />
+        <text x={X(0) + 8} y={Y(1) - 6} class="bi-lab">barrier, E = a</text>
+        <polyline points={curve} class="bi-curve" />
+        <text x={X(-1)} y="234" class="bi-lab" text-anchor="middle">A</text>
+        <text x={X(1)} y="234" class="bi-lab" text-anchor="middle">B</text>
+        <text x={X(0)} y="234" class="bi-lab" text-anchor="middle">x = 0</text>
+        <circle data-el="ball" cx={X(1)} cy={Y(0) - 8} r="8" class="bi-ball" />
+      </svg>
+    </div>
+  </div>
+  <div class="bi-bar" data-bar hidden>
+    <p class="bi-read mono" data-el="read" aria-live="polite">Drag the midpoint of the strip, or focus it and use the arrow keys.</p>
+    <button type="button" class="filter" data-el="flip">Flip state</button>
+    <button type="button" class="filter" data-el="reset">Reset</button>
+  </div>
+  <figcaption class="figcap">How a bistable mechanism snaps. A simplified model, not the lab's data.</figcaption>
+</figure>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // E(x) = a (x^2 - 1)^2  ->  dE/dx = 4 a x (x^2 - 1)
+  const K = 26, C = 5.5, LIM = 1.45, H = 70;
+
+  document.querySelectorAll<HTMLElement>('[data-bistable]').forEach((root) => {
+    const a = Number(root.dataset.a) || 1;
+    const q = <T extends Element>(n: string) => root.querySelector<T>(`[data-el="${n}"]`)!;
+    const sSvg = q<SVGSVGElement>('strip-svg');
+    const strip = q<SVGPolylineElement>('strip'), handle = q<SVGGElement>('handle'), ball = q<SVGCircleElement>('ball');
+    const read = q<HTMLElement>('read');
+    const compact = root.classList.contains('bi-compact');
+    root.querySelector<HTMLElement>('[data-bar]')!.hidden = false;
+
+    const E = (x: number) => a * (x * x - 1) ** 2;
+    const dE = (x: number) => 4 * a * x * (x * x - 1);
+    const ex = (x: number) => 180 + x * 95, ey = (e: number) => 215 - e * 72;
+
+    let u = 1, v = 0, held = false, raf = 0, last = 0, home = 1;
+    handle.setAttribute('tabindex', '0'); handle.setAttribute('role', 'slider');
+    handle.setAttribute('aria-label', 'Strip midpoint position'); handle.setAttribute('aria-orientation', 'vertical');
+    handle.setAttribute('aria-valuemin', '-1.5'); handle.setAttribute('aria-valuemax', '1.5');
+    handle.style.cursor = 'ns-resize';
+    // Blink ignores touch-action on SVG children, so stop the page scrolling only when a touch starts on the handle.
+    sSvg.addEventListener('touchstart', (e) => { if ((e.target as Element).closest('[data-el="handle"]')) e.preventDefault(); }, { passive: false });
+
+    const render = () => {
+      const pts: string[] = [];
+      for (let i = 0; i <= 40; i++) { const s = i / 40; pts.push(`${(44 + 272 * s).toFixed(1)},${(160 - u * H * 0.5 * (1 - Math.cos(2 * Math.PI * s))).toFixed(1)}`); }
+      strip.setAttribute('points', pts.join(' '));
+      handle.setAttribute('transform', `translate(180 ${(160 - u * H).toFixed(1)})`);
+      ball.setAttribute('cx', ex(u).toFixed(1)); ball.setAttribute('cy', (ey(E(u)) - 8).toFixed(1));
+      const st = u > 0 ? 'B' : 'A';
+      handle.setAttribute('aria-valuenow', u.toFixed(2)); handle.setAttribute('aria-valuetext', `Shape ${st}, x = ${u.toFixed(2)}`);
+      const past = Math.sign(u) !== Math.sign(home);
+      root.classList.toggle('past', past && held);
+      const verdict = held ? (past ? 'past the barrier: it will snap' : 'before the barrier: it will fall back') : `resting in shape ${st}`;
+      read.textContent = compact ? verdict.replace(/^./, (c) => c.toUpperCase()) + '.' : `x = ${u.toFixed(2)}   E = ${E(u).toFixed(2)}a   ${verdict}`;
+    };
+
+    const step = (now: number) => {
+      let dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const n = Math.max(1, Math.ceil(dt / (1 / 240))); dt /= n;
+      for (let i = 0; i < n; i++) { v += (-K * dE(u) - C * v) * dt; u += v * dt; }
+      render();
+      if (Math.abs(v) < 0.01 && Math.abs(Math.abs(u) - 1) < 0.004) { u = Math.sign(u); v = 0; render(); return; }
+      raf = requestAnimationFrame(step);
+    };
+    const release = () => {
+      held = false; cancelAnimationFrame(raf);
+      if (reduce) { u = u >= 0 ? 1 : -1; v = 0; home = u; render(); return; }
+      v = 0; last = performance.now(); raf = requestAnimationFrame(step);
+    };
+    const grab = () => { held = true; cancelAnimationFrame(raf); v = 0; home = u >= 0 ? 1 : -1; };
+    const setU = (x: number) => { u = Math.max(-LIM, Math.min(LIM, x)); render(); };
+
+    // pointer drag: mouse, touch and pen
+    const toU = (e: PointerEvent) => {
+      const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(sSvg.getScreenCTM()!.inverse());
+      return (160 - p.y) / H;
+    };
+    handle.addEventListener('pointerdown', (e) => { handle.setPointerCapture(e.pointerId); grab(); e.preventDefault(); handle.focus({ preventScroll: true }); });
+    handle.addEventListener('pointermove', (e) => { if (held && handle.hasPointerCapture(e.pointerId)) setU(toU(e)); });
+    const end = (e: PointerEvent) => { if (held && handle.hasPointerCapture(e.pointerId)) { handle.releasePointerCapture(e.pointerId); release(); } };
+    handle.addEventListener('pointerup', end); handle.addEventListener('pointercancel', end);
+
+    // keyboard: arrows nudge, and the strip is let go after a short pause
+    let idle = 0;
+    handle.addEventListener('keydown', (e) => {
+      const d = ({ ArrowUp: 0.1, ArrowRight: 0.1, ArrowDown: -0.1, ArrowLeft: -0.1, PageUp: 0.5, PageDown: -0.5 } as Record<string, number>)[e.key];
+      if (d === undefined && e.key !== 'Home' && e.key !== 'End') return;
+      e.preventDefault();
+      if (!held) grab();
+      setU(e.key === 'Home' ? -1 : e.key === 'End' ? 1 : u + d);
+      clearTimeout(idle); idle = window.setTimeout(release, e.key === 'Home' || e.key === 'End' ? 50 : 650);
+    });
+
+    // buttons (for anyone who would rather not drag)
+    q<HTMLButtonElement>('flip').addEventListener('click', () => {
+      grab();
+      const to = -Math.sign(u || 1) * 0.3, from = u, t0 = performance.now();
+      if (reduce) { setU(to); release(); return; }
+      const f = (now: number) => { const k = Math.min(1, (now - t0) / 380); setU(from + (to - from) * (1 - (1 - k) ** 2)); if (k < 1) requestAnimationFrame(f); else release(); };
+      requestAnimationFrame(f);
+    });
+    q<HTMLButtonElement>('reset').addEventListener('click', () => { cancelAnimationFrame(raf); u = 1; v = 0; held = false; home = 1; render(); });
+    render();
+  });
+</script>

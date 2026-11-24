@@ -1,0 +1,128 @@
+---
+// Interactive port of HeartBridge's triage rules. Logic lives in src/lib/triageSim.ts.
+import { THRESHOLDS } from '../lib/triageSim';
+interface Props { compact?: boolean; }
+const { compact = false } = Astro.props;
+const radio = (name: string, items: [string, string][], checked: string) => items.map(([v, l]) => ({ name, v, l, on: v === checked }));
+const breath = radio('breath', [['normal', 'Normal'], ['exertion', 'Worse with activity'], ['rest', 'Short of breath at rest']], 'normal');
+const swelling = radio('swelling', [['none', 'None'], ['mild', 'Mild'], ['worse', 'Getting worse']], 'none');
+const missed = radio('missed', [['0', '0'], ['1', '1'], ['2', '2'], ['3', '3']], '0');
+const toggles = [
+  ['orthopnea', 'Needs more pillows to sleep'],
+  ['pnd', 'Woke up short of breath'],
+  ['chestPain', 'Chest pain or pressure'],
+  ['fainting', 'Fainted'],
+  ['confusion', 'New confusion'],
+  ['dizzy', 'Dizzy'],
+];
+---
+<figure data-triage class:list={['tri', compact && 'tri-compact']}>
+  <div data-needjs class="tri-form" hidden>
+    <div class="tri-presets" role="group" aria-label="Example patients">
+      <span class="mono">Try</span>
+      <button type="button" class="filter" data-preset="stable">Stable day</button>
+      <button type="button" class="filter" data-preset="fluid">Fluid build-up</button>
+      <button type="button" class="filter" data-preset="emergency">Emergency</button>
+    </div>
+    <div class="tri-grid">
+      <div class="tri-in">
+        <label class="tri-sl"><span class="mono">Weight change, last 24 h</span><output data-out="d24">+0.5 lb</output>
+          <input type="range" name="d24" min="-6" max="6" step="0.5" value="0.5" /></label>
+        <label class="tri-sl"><span class="mono">Weight change, last 7 days</span><output data-out="d7">+1 lb</output>
+          <input type="range" name="d7" min="-8" max="10" step="0.5" value="1" /></label>
+        <fieldset class="tri-fs"><legend class="mono">Breathing</legend>
+          {breath.map((r) => <label class="tri-opt"><input type="radio" name={r.name} value={r.v} checked={r.on} /><span>{r.l}</span></label>)}
+        </fieldset>
+        <fieldset class="tri-fs"><legend class="mono">Leg swelling</legend>
+          {swelling.map((r) => <label class="tri-opt"><input type="radio" name={r.name} value={r.v} checked={r.on} /><span>{r.l}</span></label>)}
+        </fieldset>
+        <fieldset class="tri-fs"><legend class="mono">Diuretic days missed in a row</legend>
+          {missed.map((r) => <label class="tri-opt"><input type="radio" name={r.name} value={r.v} checked={r.on} /><span>{r.l}</span></label>)}
+        </fieldset>
+        <fieldset class="tri-fs"><legend class="mono">Symptoms</legend>
+          {toggles.map(([n, l]) => <label class="tri-opt"><input type="checkbox" name={n} /><span>{l}</span></label>)}
+        </fieldset>
+      </div>
+      <div class="tri-res" aria-live="polite">
+        <p class="mono">Decision</p>
+        <p class="tri-tier" data-out="tier" data-tier="GREEN">GREEN</p>
+        <p class="tri-mean" data-out="mean"></p>
+        <p class="mono tri-fh">Why (as the care team sees it)</p>
+        <ul class="tri-flags" data-out="flags"></ul>
+        <p class="tri-note"><strong>Rules decide. The LLM only phrases.</strong> In HeartBridge the tier comes from this function, the same way every time. The language model words the conversation and never touches the decision.</p>
+      </div>
+    </div>
+  </div>
+  <div class="nojs tri-form">
+    <p class="mono">Thresholds from triage.js (interactive version needs JavaScript)</p>
+    <table class="spec mt-2">
+      <tbody>
+        <tr><th scope="row">Weight up in 24 h</th><td>YELLOW at ≥ {THRESHOLDS.gain24hLb} lb</td></tr>
+        <tr><th scope="row">Weight up in 7 days</th><td>YELLOW at ≥ {THRESHOLDS.gain7dLb} lb</td></tr>
+        <tr><th scope="row">Weight down in 24 h</th><td>YELLOW at ≥ {THRESHOLDS.weightDropLb} lb, or ≥ {THRESHOLDS.lossDehydrationLb} lb with dizziness</td></tr>
+        <tr><th scope="row">Missed diuretic</th><td>YELLOW at {THRESHOLDS.missedDiureticDays} days in a row</td></tr>
+        <tr><th scope="row">Chest pain, fainting, confusion, short of breath at rest</th><td>RED</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figcaption class="figcap">Simplified port of HeartBridge's rule engine (triage.js). Not medical advice.</figcaption>
+</figure>
+
+<script>
+  import { triage, type Answers } from '../lib/triageSim';
+
+  const MEANING: Record<string, string> = {
+    RED: 'Emergency. The patient is told to call 911 and the nurse and caregiver are alerted.',
+    YELLOW: 'Nurse callback today.',
+    GREEN: 'No flags. The patient gets self-care advice.',
+  };
+  const PRESETS: Record<string, Partial<Answers> & Record<string, unknown>> = {
+    stable: { d24: 0.5, d7: 1, breath: 'normal', swelling: 'none', missed: '0' },
+    fluid: { d24: 2.5, d7: 4, breath: 'exertion', swelling: 'worse', orthopnea: true, missed: '0' },
+    emergency: { d24: 1, d7: 2, breath: 'rest', swelling: 'none', chestPain: true, missed: '0' },
+  };
+  const sign = (n: number) => (n > 0 ? '+' : '') + n;
+
+  document.querySelectorAll<HTMLElement>('[data-triage]').forEach((root) => {
+    const form = root.querySelector<HTMLElement>('[data-needjs]')!;
+    form.hidden = false;
+    const f = (n: string) => root.querySelector<HTMLInputElement>(`[name="${n}"]`)!;
+    const out = (n: string) => root.querySelector<HTMLElement>(`[data-out="${n}"]`)!;
+    const radio = (n: string) => root.querySelector<HTMLInputElement>(`[name="${n}"]:checked`)!.value;
+
+    const run = () => {
+      const a: Answers = {
+        d24: Number(f('d24').value), d7: Number(f('d7').value),
+        breath: radio('breath') as Answers['breath'], swelling: radio('swelling') as Answers['swelling'],
+        orthopnea: f('orthopnea').checked, pnd: f('pnd').checked, chestPain: f('chestPain').checked,
+        fainting: f('fainting').checked, confusion: f('confusion').checked, dizzy: f('dizzy').checked,
+        missedDiureticDays: Number(radio('missed')),
+      };
+      out('d24').textContent = `${sign(a.d24)} lb`; out('d7').textContent = `${sign(a.d7)} lb`;
+      const r = triage(a);
+      const t = out('tier'); t.textContent = r.tier; t.dataset.tier = r.tier;
+      out('mean').textContent = MEANING[r.tier];
+      const ul = out('flags'); ul.replaceChildren();
+      if (!r.flags.length) { const li = document.createElement('li'); li.className = 'tri-none'; li.textContent = 'No rule fired.'; ul.append(li); }
+      r.flags.forEach((fl) => {
+        const li = document.createElement('li'); li.dataset.tier = fl.tier;
+        const code = document.createElement('code'); code.textContent = fl.code;
+        li.append(fl.text + ' ', code); ul.append(li);
+      });
+    };
+    root.addEventListener('input', run);
+    root.querySelectorAll<HTMLButtonElement>('[data-preset]').forEach((b) =>
+      b.addEventListener('click', () => {
+        root.querySelectorAll<HTMLInputElement>('input[type=checkbox]').forEach((c) => (c.checked = false));
+        const p = { ...PRESETS[b.dataset.preset!] } as Record<string, unknown>;
+        for (const [k, v] of Object.entries(p)) {
+          if (typeof v === 'boolean') f(k).checked = v;
+          else if (k === 'breath' || k === 'swelling' || k === 'missed') root.querySelector<HTMLInputElement>(`[name="${k}"][value="${v}"]`)!.checked = true;
+          else f(k).value = String(v);
+        }
+        run();
+      }),
+    );
+    run();
+  });
+</script>

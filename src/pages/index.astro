@@ -1,52 +1,118 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
+import HeroMedia from '../components/HeroMedia.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { now } from '../config';
+import BistableSnap from '../components/BistableSnap.astro';
+import TriageSim from '../components/TriageSim.astro';
+import StockSnapViewer from '../components/StockSnapViewer.astro';
+import { site, links, now, specStrip } from '../config';
 
-const projects = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order);
-const labs = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+const all = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order);
+const physical = all.filter((p) => p.data.kind !== 'software');
+const software = all.filter((p) => p.data.kind === 'software');
+const figNo = (p: any) => all.indexOf(p) + 2; // fig. 01 is the hero
 ---
 <Base>
-  <Hero />
+  <section class="border-b border-[var(--rule)]">
+    <div class="wrap py-10 sm:py-16 grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-center">
+      <div>
+        <p class="mono reveal">{site.label}</p>
+        <h1 class="mt-4 text-4xl sm:text-5xl font-bold leading-[1.08] reveal" style="animation-delay:.05s">{site.tagline}</h1>
+        <div class="rule-accent mt-6"></div>
+        <p class="mt-5 max-w-lg text-lg reveal" style="animation-delay:.1s">{site.sub}</p>
+        <div class="mt-8 flex flex-wrap gap-3 reveal" style="animation-delay:.15s">
+          <a class="btn btn-primary" href="/projects/">See the work</a>
+          <a class="btn" href={links.resume}>Resume (PDF)</a>
+          <a class="btn" href={`mailto:${links.email}`}>Email</a>
+        </div>
+      </div>
+      <HeroMedia />
+    </div>
+  </section>
 
-  <section class="border-b border-[var(--line)]" aria-labelledby="now-h">
-    <div class="wrap py-6">
-      <h2 id="now-h" class="mono mb-3">Now</h2>
-      <ul class="grid gap-3 sm:grid-cols-3">
-        {now.map((n) => (
-          <li class="text-sm"><span class="tag tag-accent mr-2">{n.label}</span><span class="muted">{n.text}</span></li>
+  <section class="border-b border-[var(--rule)] bg-[var(--surface)]" aria-label="At a glance">
+    <div class="wrap">
+      <dl class="grid grid-cols-2 lg:grid-cols-4">
+        {specStrip.map((s, i) => (
+          <div class:list={['py-5 px-1 sm:px-4', i % 2 === 1 && 'border-l border-[var(--rule)]', i > 1 && 'border-t border-[var(--rule)] lg:border-t-0', i > 0 && 'lg:border-l lg:border-[var(--rule)]']}>
+            <dt class="font-display text-4xl font-bold text-[var(--steel)]">{s.n}</dt>
+            <dd class="mono mt-1">{s.label}</dd>
+          </div>
         ))}
-      </ul>
+      </dl>
     </div>
   </section>
 
-  <section class="wrap pt-14" aria-labelledby="proj-h">
-    <div class="flex items-end justify-between mb-5">
-      <h2 id="proj-h" class="text-2xl font-semibold">Projects</h2>
-      <a href="/projects/" class="text-sm muted hover:text-[var(--fg)]">All projects</a>
+  <section class="wrap pt-16" aria-labelledby="work-h">
+    <div class="flex items-end justify-between mb-6 gap-4">
+      <div>
+        <p class="mono">Selected work</p>
+        <h2 id="work-h" class="text-2xl sm:text-3xl font-bold mt-1">Hardware and research</h2>
+      </div>
+      <a href="/projects/" class="text-sm underline whitespace-nowrap">All work</a>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2">
-      {projects.map((p) => (
-        <ProjectCard href={`/projects/${p.id}/`} title={p.data.title} context={p.data.context} summary={p.data.summary} stack={p.data.stack} status={p.data.status} />
-      ))}
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {physical.map((p) => <ProjectCard p={p} id={p.id} fig={figNo(p)} />)}
     </div>
   </section>
 
-  <section class="wrap pt-14" aria-labelledby="res-h">
-    <div class="flex items-end justify-between mb-5">
-      <h2 id="res-h" class="text-2xl font-semibold">Research</h2>
-      <a href="/research/" class="text-sm muted hover:text-[var(--fg)]">All labs</a>
+  <section class="wrap pt-16" aria-labelledby="try-h">
+    <p class="mono">Try it</p>
+    <h2 id="try-h" class="text-2xl sm:text-3xl font-bold mt-1">The engineering, interactive</h2>
+    <p class="mt-2 max-w-xl muted">Three small models of real work. Each one is labeled with what it is and what it isn't.</p>
+
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold">How the fish robot's drive snaps <a href="/projects/dynagence-thrust-rig/" class="text-sm font-normal underline ml-2">DynaGence case study</a></h3>
+      <div class="mt-3"><BistableSnap compact prefix="home-bi" /></div>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2">
-      {labs.map((l) => (
-        <a class="card" href={`/research/#${l.id}`}>
-          <p class="mono">{l.data.period}</p>
-          <h3 class="mt-1 text-lg font-semibold">{l.data.lab}</h3>
-          <p class="mt-2 text-sm muted">{l.data.summary}</p>
-        </a>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-2">
+      <div>
+        <h3 class="text-lg font-semibold">HeartBridge's triage rules <a href="/projects/heartbridge/" class="text-sm font-normal underline ml-2">Case study</a></h3>
+        <div class="mt-3"><TriageSim compact /></div>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold">StockSnap's shelf detections <a href="/projects/stocksnap/" class="text-sm font-normal underline ml-2">Case study</a></h3>
+        <div class="mt-3"><StockSnapViewer /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pt-16" aria-labelledby="sw-h">
+    <div class="mb-6">
+      <p class="mono">Selected work</p>
+      <h2 id="sw-h" class="text-2xl sm:text-3xl font-bold mt-1">Software projects</h2>
+    </div>
+    <div class="grid gap-5 sm:grid-cols-2">
+      {software.map((p) => <ProjectCard p={p} id={p.id} fig={figNo(p)} />)}
+    </div>
+  </section>
+
+  <section class="wrap pt-16" aria-labelledby="now-h">
+    <p class="mono">On the bench</p>
+    <h2 id="now-h" class="text-2xl sm:text-3xl font-bold mt-1">Right now</h2>
+    <ul class="mt-5 grid gap-4 sm:grid-cols-3">
+      {now.map((n) => (
+        <li class="border-t-2 border-[var(--ink)] pt-3">
+          <p class="mono">{n.label}</p>
+          <p class="mt-1">{n.text}</p>
+        </li>
       ))}
+    </ul>
+  </section>
+
+  <section class="wrap pt-16" aria-labelledby="contact-h">
+    <div class="bg-[var(--surface)] border border-[var(--rule)] p-6 sm:p-8 grid gap-6 sm:flex sm:items-center sm:justify-between">
+      <div>
+        <h2 id="contact-h" class="text-2xl font-bold">Get in touch</h2>
+        <p class="mt-2 max-w-md muted">Looking for a summer 2027 research spot in medical robotics, or anywhere hardware meets learning.</p>
+      </div>
+      <p class="flex flex-wrap gap-3">
+        <a class="btn btn-primary" href={`mailto:${links.email}`}>{links.email}</a>
+        <a class="btn" href={links.linkedin} rel="me">LinkedIn</a>
+        <a class="btn" href={links.github} rel="me">GitHub</a>
+      </p>
     </div>
   </section>
 </Base>

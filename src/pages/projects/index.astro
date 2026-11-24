@@ -3,16 +3,56 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const physical = all.filter((p) => p.data.kind !== 'software');
+const software = all.filter((p) => p.data.kind === 'software');
+const figNo = (p: any) => all.indexOf(p) + 2;
+const filters = ['All', 'Hardware', 'Research', 'Software'];
 ---
-<Base title="Projects" description="Case studies: HeartBridge and StockSnap.">
-  <div class="wrap pt-14">
-    <p class="mono">Projects</p>
-    <h1 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight">Things I've built</h1>
-    <div class="mt-10 grid gap-4 sm:grid-cols-2">
-      {projects.map((p) => (
-        <ProjectCard href={`/projects/${p.id}/`} title={p.data.title} context={p.data.context} summary={p.data.summary} stack={p.data.stack} status={p.data.status} />
-      ))}
+<Base title="Work" description="Case studies: a fish-robot thrust rig, soft surgical-robot joints, UAV sensing, thermal imaging, and two software projects.">
+  <div class="wrap pt-12">
+    <p class="mono">Work</p>
+    <h1 class="mt-2 text-3xl sm:text-4xl font-bold">Robots, rigs and the code around them</h1>
+    <p class="mt-3 muted max-w-xl">Each page covers what I built, what the team did, and where it stands.</p>
+
+    <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter by discipline" id="filters" hidden>
+      {filters.map((f) => <button type="button" class="filter" data-f={f} aria-pressed={f === 'All' ? 'true' : 'false'}>{f}</button>)}
     </div>
+
+    <h2 class="mono mt-10 mb-4" data-group>Hardware and research</h2>
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4" data-grid>
+      {physical.map((p) => <div data-card><ProjectCard p={p} id={p.id} fig={figNo(p)} /></div>)}
+    </div>
+
+    <h2 class="mono mt-12 mb-4" data-group>Software projects</h2>
+    <div class="grid gap-5 sm:grid-cols-2" data-grid>
+      {software.map((p) => <div data-card><ProjectCard p={p} id={p.id} fig={figNo(p)} /></div>)}
+    </div>
+    <p id="none" class="muted mt-8" hidden>Nothing under that filter yet.</p>
   </div>
 </Base>
+
+<script>
+  // Filters are an extra: with JavaScript off, every card just shows.
+  const bar = document.getElementById('filters');
+  if (bar) {
+    bar.hidden = false;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-card]')];
+    const grids = [...document.querySelectorAll<HTMLElement>('[data-grid]')];
+    const btns = [...bar.querySelectorAll<HTMLButtonElement>('button')];
+    const apply = (f: string) => {
+      btns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.f === f)));
+      cards.forEach((c) => {
+        const d = c.querySelector<HTMLElement>('[data-disc]')?.dataset.disc ?? '';
+        c.hidden = !(f === 'All' || d.split(' ').includes(f));
+      });
+      grids.forEach((g) => {
+        const any = [...g.children].some((c) => !(c as HTMLElement).hidden);
+        g.hidden = !any;
+        (g.previousElementSibling as HTMLElement).hidden = !any;
+      });
+      (document.getElementById('none') as HTMLElement).hidden = cards.some((c) => !c.hidden);
+    };
+    btns.forEach((b) => b.addEventListener('click', () => apply(b.dataset.f!)));
+  }
+</script>

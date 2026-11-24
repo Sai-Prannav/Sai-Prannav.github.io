@@ -1,35 +1,55 @@
 ---
 title: HeartBridge
-summary: A Telegram agent for heart-failure patients after they leave the hospital.
+summary: A Telegram agent that checks in on heart-failure patients after discharge, with a nurse dashboard.
 context: Built at HackGT 13 (Georgia Tech)
 date: Sep 2026
-order: 1
+order: 5
 featured: true
-stack: [Python, Telegram, LLM, Rule-based triage]
-repo: heartbridge
+kind: software
+disciplines: [Software]
+role: Built the core engine. Rebuilding it as v2, solo.
 status: v2 in progress
-slot:
-  title: Telegram screen recording
-  need: A short recording of a v2 conversation using fake patient data. See VISUALS_NEEDED.md.
+statusWaiting: true
+stack: [Node.js, Express, React, Telegram, LLM, Rule-based triage]
+repo: heartbridge
+widgets: [triage]
+card:
+  kind: video
+  src: /media/heartbridge/heartbridge-demo.mp4
+  webm: /media/heartbridge/heartbridge-demo.webm
+  poster: /media/heartbridge/heartbridge-dashboard.png
+  alt: Screen recording of the HeartBridge demo
+  caption: Demo recording. Every patient shown is made up.
+specs:
+  - { k: Triage, v: 'Deterministic rules: GREEN / YELLOW / RED' }
+  - { k: LLM's job, v: 'Language only, never the decision' }
+  - { k: Backend tests, v: '1,207 passing (1,213 total, 6 todo)' }
+  - { k: Rule evaluation, v: 'Caught 41% of emergencies phrased unexpectedly; 54% with a local model added' }
+  - { k: Status, v: 'Hackathon prototype, not clinical software' }
+figures:
+  - { kind: image, src: /media/heartbridge/heartbridge-dashboard.png, alt: The nurse worklist with a red alert and demo patients, caption: 'Nurse worklist (demo data).' }
+  - { kind: image, src: /media/heartbridge/heartbridge-conversation.png, alt: A patient conversation in Spanish with English translations, caption: 'Patient check-in in Spanish, with English underneath (demo data).' }
+  - { kind: image, src: /media/heartbridge/heartbridge-alert.png, alt: An alert on the nurse dashboard, caption: 'An alert with the reasons it fired (demo data).' }
+  - { kind: image, src: /media/heartbridge/heartbridge-patient.png, alt: A patient detail view, caption: 'Patient detail (demo data).' }
+  - { kind: image, src: /media/heartbridge/heartbridge-weight-trend.png, alt: A weight trend chart, caption: 'Weight trend (demo data).' }
+  - { kind: image, src: /media/heartbridge/heartbridge-risk-reasons.png, alt: Risk reasons listed for a patient, caption: 'Risk reasons (demo data).' }
 ---
-## Problem
+## The problem
 
-Heart-failure patients go home from the hospital and mostly look after themselves until the next clinic visit. That gap is where problems get missed, and I think a tool that talks to patients there has to be careful about what it says.
+Heart-failure patients mostly look after themselves between discharge and the next clinic visit. That gap is where I think deterioration gets missed, and it's the one I wanted to cover.
+
+## The design call
+
+I made the triage rules, not a model. Weight change, symptoms and red flags go into a pure function, and a tier comes out with a reason for every flag. The same input always gives the same answer, and I can test every rule. The LLM words the conversation, but it can't touch the decision.
 
 ## What I built
 
-A Telegram agent for patients after discharge. I built the core engine at HackGT 13 at Georgia Tech. A v2 rebuild is in progress.
+I built the core engine at HackGT 13 at Georgia Tech in September 2026. It's got Telegram check-ins, the triage rules, and a nurse dashboard with live alerts. It doesn't stop at English: it also speaks, Spanish, Vietnamese, Hindi and Chinese.
 
-## How it works
+## What testing showed
 
-The triage is deterministic. Fixed rules take the patient's situation and produce a decision, so the same input always gives the same answer and you can read exactly why. The language model is used only for language, which means wording the conversation. It never decides how urgent something is.
+The repo's own evaluation tried emergencies phrased in ways the rules weren't designed for. They caught 41%, and 54% with a local model added. That gap is why I'm doing v2, and it's what I'm testing against.
 
-I split it this way because I don't think a model that's usually right is good enough for a medical decision. Rules I can test.
+## v2
 
-## Stack
-
-Python, Telegram, an LLM for the language layer, and a rules module for triage.
-
-## What I'd do next
-
-I'd write a test case for every triage rule, handle missed check-ins properly, and get a clinician to review the rules. That's the plan for v2.
+I'm rebuilding it solo. I'm adding a test for every triage rule, proper handling of missed check-ins, and a clinician review of the thresholds.

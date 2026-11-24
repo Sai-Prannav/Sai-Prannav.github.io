@@ -1,0 +1,42 @@
+---
+// One place that decides what a picture slot shows:
+//   file exists  -> image, or a muted looping video with a poster (still for reduced motion)
+//   file missing -> a "media coming" frame that names the file, never a broken image
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+interface Props {
+  kind: 'image' | 'video';
+  src: string;
+  webm?: string;
+  poster?: string;
+  alt: string;
+  caption?: string;
+  ratio?: string;
+  contain?: boolean;
+  eager?: boolean;
+}
+const { kind, src, webm, poster, alt, ratio = '4 / 3', contain = false, eager = false } = Astro.props;
+const has = (p?: string) => !!p && existsSync(join(process.cwd(), 'public', p.replace(/^\//, '')));
+const ok = has(src);
+const okPoster = has(poster);
+const okWebm = has(webm);
+const file = src.split('/').pop();
+---
+<div class:list={['fig', contain && 'fig-contain']} style={`aspect-ratio:${ratio}`}>
+  {ok && kind === 'image' && <img src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />}
+  {ok && kind === 'video' && (
+    <video muted loop playsinline preload="none" data-loop poster={okPoster ? poster : undefined} aria-label={alt}>
+      {okWebm && <source src={webm} type="video/webm" />}
+      <source src={src} type="video/mp4" />
+    </video>
+  )}
+  {!ok && (
+    <div class="slot" role="img" aria-label={`Media coming: ${alt}`}>
+      <div>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" class="mx-auto mb-2"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="9" cy="11" r="2"/><path d="m21 16-5-5-8 8"/></svg>
+        <p class="mono">Media coming</p>
+        <p class="mono-n mt-1 break-all">{file}</p>
+      </div>
+    </div>
+  )}
+</div>

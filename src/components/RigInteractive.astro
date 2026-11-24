@@ -1,0 +1,114 @@
+---
+// Interactive version of the thrust-rig schematic (see src/assets/rig-schematic.svg).
+// Without JavaScript it is the same static drawing, with its numbered callouts.
+import Schematic from './Schematic.astro';
+interface Props { prefix?: string; caption?: string; figNo?: string; }
+const { prefix = 'rig', caption, figNo } = Astro.props;
+const parts = {
+  frame: ['Aluminum frame', 'A rigid 2020 profile frame holds everything still, so the only thing moving the load cells is the fish.'],
+  mount: ['3D-printed mount', 'Locates the rod and the load cells in line with the thrust. This is the part I fabricated after the print-versus-buy analysis.'],
+  cells: ['Load cells', 'Where thrust gets measured. The fish pulls on the rod, the load cells flex a hair, and their output changes by microvolts.'],
+  fish: ['Fish robot', 'A carangiform body driven by a bistable hair-clip mechanism. Its tail snaps between two stable shapes and the rod feels the push.'],
+  tank: ['Tank', 'Still water, so the robot pushes against the rod instead of swimming away.'],
+  hx: ['HX711 amplifiers', 'A 24-bit converter built for load cells. It amplifies the microvolt signal and digitizes it.'],
+  arduino: ['Arduino', 'Reads the digitized values from the HX711s and streams them out for logging. Load-cell readout: in progress.'],
+};
+---
+<figure data-rig data-parts={JSON.stringify(parts)}>
+  <div class="fig fig-contain" style="aspect-ratio:3 / 2"><Schematic prefix={prefix} /></div>
+  <div class="callout" data-callout aria-live="polite" hidden>
+    <span class="mono">Tap or hover a part</span>
+  </div>
+  <figcaption class="figcap">{figNo && <span class="text-[var(--accent-ink)]">{figNo} </span>}{caption ?? 'Illustration of the signal chain. Not measured data.'}</figcaption>
+</figure>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  document.querySelectorAll<HTMLElement>('[data-rig]').forEach((root) => {
+    const svg = root.querySelector<SVGSVGElement>('svg')!;
+    const callout = root.querySelector<HTMLElement>('[data-callout]')!;
+    const parts: Record<string, [string, string]> = JSON.parse(root.dataset.parts!);
+    const q = (n: string) => svg.querySelector<SVGGraphicsElement>(`[data-el="${n}"]`)!;
+    callout.hidden = false;
+
+    // ---- part highlight + callout (mouse, touch, keyboard) ----
+    const groups = [...svg.querySelectorAll<SVGGElement>('.part')];
+    const select = (g: SVGGElement) => {
+      groups.forEach((x) => { x.classList.toggle('on', x === g); x.setAttribute('aria-pressed', String(x === g)); });
+      const [name, text] = parts[g.dataset.part!];
+      callout.replaceChildren();
+      const b = document.createElement('strong'); b.textContent = name + '. ';
+      callout.append(b, text);
+    };
+    groups.forEach((g) => {
+      const [name] = parts[g.dataset.part!];
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', name);
+      g.setAttribute('aria-pressed', 'false');
+      g.addEventListener('pointerenter', (e) => { if ((e as PointerEvent).pointerType === 'mouse') select(g); });
+      g.addEventListener('click', () => select(g));
+      g.addEventListener('focus', () => select(g));
+      g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(g); } });
+    });
+
+    // ---- illustrative animation: tail snap -> pulse along the wires -> strip chart ----
+    const tail = q('tail');
+    const trace = q('trace') as unknown as SVGPolylineElement;
+    const chain: SVGPathElement[][] = [[q('w1'), q('w2')], [q('h1'), q('h2')], [q('ser')]].map((a) => a as unknown as SVGPathElement[]);
+    const dots = [0, 1].map(() => {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('r', '3.6'); c.setAttribute('class', 'rs-s'); c.setAttribute('opacity', '0');
+      svg.appendChild(c); return c;
+    });
+    const CYCLE = 3400, SEG = [[300, 1000], [1000, 1400], [1400, 1800]];
+    const N = 49, X0 = 498, X1 = 692, BASE = 206;
+    const buf: number[] = Array(N).fill(0);
+    const lens = chain.map((s) => s.map((p) => p.getTotalLength()));
+    const draw = () => {
+      trace.setAttribute('points', buf.map((v, i) => `${(X0 + (i * (X1 - X0)) / (N - 1)).toFixed(1)},${(BASE - v).toFixed(1)}`).join(' '));
+    };
+    const frame = (t: number) => {
+      const c = t % CYCLE, n = Math.floor(t / CYCLE);
+      // snap-through: damped overshoot toward the other stable angle
+      const dir = n % 2 ? 1 : -1;
+      const A0 = -dir * 12, A1 = dir * 12;
+      const a = A1 + (A0 - A1) * Math.exp(-c / 55) * Math.cos(c / 38);
+      tail.style.transform = `rotate(${a.toFixed(2)}deg)`;
+      dots.forEach((d) => d.setAttribute('opacity', '0'));
+      SEG.forEach(([s0, s1], i) => {
+        if (c < s0 || c >= s1) return;
+        const k = (c - s0) / (s1 - s0);
+        chain[i].forEach((p, j) => {
+          const pt = p.getPointAtLength(lens[i][j] * k);
+          dots[j].setAttribute('cx', String(pt.x)); dots[j].setAttribute('cy', String(pt.y)); dots[j].setAttribute('opacity', '1');
+        });
+      });
+      // chart sample (20 Hz is plenty)
+      const since = c - 1800;
+      const bump = since >= 0 ? Math.exp(-since / 260) * Math.sin(since / 70) * 34 : 0;
+      const jit = Math.sin(t / 37) * 1.1 + Math.sin(t / 91) * 0.9;
+      return bump + jit;
+    };
+
+    if (reduce) { draw(); return; }
+    let raf = 0, last = 0, acc = 0, t0 = 0, run = false, vis = true;
+    const loop = (now: number) => {
+      if (!t0) t0 = now;
+      const t = now - t0;
+      const v = frame(t);
+      acc += now - last; last = now;
+      if (acc >= 50) { acc = 0; buf.push(v); buf.shift(); draw(); }
+      raf = requestAnimationFrame(loop);
+    };
+    const sync = () => {
+      const go = vis && !document.hidden;
+      if (go && !run) { run = true; last = performance.now(); raf = requestAnimationFrame(loop); }
+      else if (!go && run) { run = false; cancelAnimationFrame(raf); }
+    };
+    new IntersectionObserver((e) => { vis = e[0].isIntersecting; sync(); }, { threshold: 0.1 }).observe(root);
+    document.addEventListener('visibilitychange', sync);
+  });
+</script>

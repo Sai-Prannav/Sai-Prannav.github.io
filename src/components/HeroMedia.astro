@@ -1,0 +1,14 @@
+---
+import { heroMedia } from '../config';
+import Media from './Media.astro';
+import RigInteractive from './RigInteractive.astro';
+const m = heroMedia;
+---
+{m.type === 'schematic' ? (
+  <RigInteractive prefix="hero" figNo="fig. 01" caption={m.caption} />
+) : (
+  <figure>
+    <Media kind={m.type === 'video' ? 'video' : 'image'} src={m.src} poster={m.poster} alt={m.alt} ratio="3 / 2" eager />
+    <figcaption class="figcap"><span class="text-[var(--accent-ink)]">fig. 01</span> {m.caption}</figcaption>
+  </figure>
+)}

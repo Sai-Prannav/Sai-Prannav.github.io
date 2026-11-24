@@ -1,13 +1,37 @@
 ---
-interface Props { href: string; title: string; context: string; summary: string; stack: string[]; status?: string; }
-const { href, title, context, summary, stack, status } = Astro.props;
+import Media from './Media.astro';
+import Withheld from './Withheld.astro';
+import Schematic from './Schematic.astro';
+interface Props { p: any; id: string; fig: number; }
+const { p, id, fig } = Astro.props;
+const d = p.data;
+// Hardware and process tags first, software tags after (same size, quieter colour).
+const sw = new Set(['Python', 'PyTorch', 'FastAPI', 'React', 'TypeScript', 'SQLite', 'YOLO11', 'Telegram', 'LLM', 'Rule-based triage', 'Deep learning', 'Machine learning', 'MATLAB']);
 ---
-<a class="card" href={href}>
-  <p class="mono">{context}</p>
-  <h3 class="mt-1 text-lg font-semibold">{title}</h3>
-  <p class="mt-2 text-sm muted">{summary}</p>
-  <div class="mt-4 flex flex-wrap gap-2">
-    {status && <span class="tag tag-accent">{status}</span>}
-    {stack.slice(0, 5).map((s) => <span class="tag">{s}</span>)}
+<div class="rv h-full">
+<a class="pcard" href={`/projects/${id}/`} data-disc={d.disciplines.join(' ')}>
+  <div class="relative">
+    {d.withheld ? <Withheld /> : d.schematic ? (
+      <div class="fig fig-contain" style="aspect-ratio:4 / 3"><Schematic prefix={`c${fig}`} hidden /></div>
+    ) : d.card ? (
+      <Media {...d.card} />
+    ) : (
+      <Media kind="image" src={`/media/${d.cardSlot ?? 'missing.png'}`} alt={d.title} />
+    )}
+    {d.badge && <span class="badge"><span data-count={d.badge.n}>{d.badge.n}</span> {d.badge.label}</span>}
+  </div>
+  <div class="p-4 flex flex-col flex-1">
+    <div class="flex items-center justify-between gap-x-2 gap-y-1 flex-wrap">
+      <span class="mono-n whitespace-nowrap">fig. {String(fig).padStart(2, '0')}</span>
+      <span class:list={['chip', d.statusWaiting && 'chip-wait']}>{d.status}</span>
+    </div>
+    <h3 class="mt-2 text-lg font-semibold leading-snug"><span>{d.title}</span></h3>
+    <p class="mono-n mt-1">{d.context} · {d.date}</p>
+    <p class="mt-2 text-sm">{d.summary}</p>
+    <p class="mt-3 text-sm"><span class="mono">My role</span> <span class="block">{d.role}</span></p>
+    <p class="mt-auto pt-4 flex flex-wrap gap-1.5">
+      {d.stack.slice(0, 6).map((s: string) => <span class:list={['tag', sw.has(s) && 'tag-sw']}>{s}</span>)}
+    </p>
   </div>
 </a>
+</div>

@@ -1,0 +1,62 @@
+---
+// Before/after viewer for a real StockSnap result. Both images share one crop (verified by pixel
+// correlation against the app's own render), so the divider reveals exactly the same photo.
+// Without JavaScript you get the annotated result as a plain image.
+interface Props { compact?: boolean; }
+---
+<figure data-ss class="ss">
+  <div class="ss-stage" style="aspect-ratio:1400 / 1132">
+    <img src="/media/stocksnap/stocksnap-clean.webp" alt="A supermarket drink shelf, unmodified photo" width="1400" height="1132" loading="lazy" decoding="async" />
+    <img data-el="top" src="/media/stocksnap/stocksnap-annotated.webp" alt="The same shelf with 53 YOLO11 detection boxes drawn on it" width="1400" height="1132" loading="lazy" decoding="async" />
+    <div class="ss-div" data-el="div" hidden><span class="ss-knob" aria-hidden="true">&#8596;</span></div>
+    <input data-el="range" class="ss-range" type="range" min="0" max="100" step="1" value="50" aria-label="Reveal detections: 0 shows all boxes, 100 shows the raw photo" hidden />
+    <span class="ss-tag ss-tag-l" aria-hidden="true">YOLO11</span>
+    <span class="ss-tag ss-tag-r" aria-hidden="true">Raw photo</span>
+  </div>
+  <div class="ss-bar">
+    <p class="ss-count"><output data-el="count" data-to="53" class="font-display">53</output> <span class="mono">detected</span></p>
+    <p class="mono ss-meta">75.0% mean confidence</p>
+    <button type="button" class="filter ml-auto" data-el="toggle" hidden aria-pressed="true">Show boxes</button>
+  </div>
+  <p class="ss-note">52 of the 53 boxes are bottles. The one big box across the right half is a false "refrigerator" from the pretrained COCO model, which is why the next step is training on real shelf photos.</p>
+  <figcaption class="figcap">Real YOLO11 output from the app, not a mock-up. Photo: "Soft drink shelf.JPG" by User:SMC, public domain, via Wikimedia Commons.</figcaption>
+</figure>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-ss]').forEach((root) => {
+    const q = <T extends HTMLElement>(n: string) => root.querySelector<T>(`[data-el="${n}"]`)!;
+    const top = q('top'), div = q('div'), range = q<HTMLInputElement>('range'), toggle = q<HTMLButtonElement>('toggle'), count = q('count');
+    div.hidden = false; range.hidden = false; toggle.hidden = false;
+    const set = (p: number) => {
+      range.value = String(p);
+      top.style.clipPath = `inset(0 0 0 ${p}%)`;
+      div.style.left = `${p}%`;
+      toggle.textContent = p < 50 ? 'Hide boxes' : 'Show boxes';
+      toggle.setAttribute('aria-pressed', String(p < 50));
+    };
+    range.addEventListener('input', () => set(Number(range.value)));
+    let raf = 0;
+    toggle.addEventListener('click', () => {
+      const from = Number(range.value), to = from < 50 ? 100 : 0;
+      cancelAnimationFrame(raf);
+      if (reduce) return set(to);
+      const t0 = performance.now();
+      const f = (now: number) => { const k = Math.min(1, (now - t0) / 500); set(from + (to - from) * (1 - (1 - k) ** 3)); if (k < 1) raf = requestAnimationFrame(f); };
+      raf = requestAnimationFrame(f);
+    });
+    set(50);
+    // Count-up when it scrolls into view (skipped for reduced motion).
+    if (!reduce && 'IntersectionObserver' in window) {
+      const to = Number(count.dataset.to);
+      const io = new IntersectionObserver((e) => {
+        if (!e[0].isIntersecting) return;
+        io.disconnect();
+        const t0 = performance.now();
+        const f = (now: number) => { const k = Math.min(1, (now - t0) / 1100); count.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(f); };
+        count.textContent = '0'; requestAnimationFrame(f);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    }
+  });
+</script>

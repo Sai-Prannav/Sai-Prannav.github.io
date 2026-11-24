@@ -10,8 +10,8 @@ npm run build    # outputs dist/
 
 ## Edit content
 
-- All links and identity strings: `src/config.ts` (GitHub, LinkedIn, email, resume path, repo URLs, "Now" strip, skills).
-- Add a project: new `.md` file in `src/content/projects/`. Copy `stocksnap.md`.
+- All links and identity strings: `src/config.ts` (GitHub, LinkedIn, email, resume path, repo URLs, hero media, spec strip, "now" block, skills).
+- Add a project or case study: new `.md` file in `src/content/projects/`. Copy `dynagence-thrust-rig.md`.
 - Add a lab or paper: `src/content/research/`.
 - Visual slots: see `VISUALS_NEEDED.md`.
 

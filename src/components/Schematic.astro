@@ -1,0 +1,13 @@
+---
+// The thrust-rig line drawing, inlined so it can use the page fonts.
+// Use `hidden` for repeat copies on a page (cards): it makes ids unique and hides them from screen readers.
+import raw from '../assets/rig-schematic.svg?raw';
+interface Props { prefix?: string; hidden?: boolean; }
+const { prefix = 'rsa', hidden = false } = Astro.props;
+let svg = raw.replace(/rs-grid/g, `${prefix}-grid`).replace(/#rs-ar|"rs-ar"/g, (m) => m.replace('rs-ar', `${prefix}-ar`));
+svg = svg.replace('id="rs-t"', `id="${prefix}-t"`).replace('id="rs-d"', `id="${prefix}-d"`).replace('aria-labelledby="rs-t rs-d"', `aria-labelledby="${prefix}-t ${prefix}-d"`);
+if (hidden) {
+  svg = svg.replace(/<title[\s\S]*?<\/title>\s*<desc[\s\S]*?<\/desc>/, '').replace(/ role="img" aria-labelledby="[^"]*"/, ' aria-hidden="true" focusable="false"');
+}
+---
+<Fragment set:html={svg} />
