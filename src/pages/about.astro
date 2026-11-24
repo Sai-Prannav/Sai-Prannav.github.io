@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { skills } from '../config';
+import { skills, links } from '../config';
 ---
 <Base title="About" description="Mechanical engineering student who builds robot hardware and the machine learning around it.">
   <div class="wrap pt-14">
@@ -10,7 +10,7 @@ import { skills } from '../config';
     <div class="prose-site mt-8">
       <p>I moved from India to the US when I was 15. I taught myself to code, mostly by building things until they worked, and that led to three AI and ML internships before I started college.</p>
       <p>Now I'm studying mechanical engineering at Kennesaw State, because I wanted to work on the hardware side of robots too. My research covers a soft surgical robot, a fish robot, thermal imaging and drone sensing. Medical robotics is the subfield I'm leaning toward for now.</p>
-      <p>I'm looking for summer 2027 research in medical robotics, or anywhere hardware and learning meet. The email link in the footer is the quickest way to reach me.</p>
+      <p>I'm looking for summer 2027 research in medical robotics, or anywhere hardware and learning meet. The quickest way to reach me is <a href={`mailto:${links.email}`}>{links.email}</a>, or my school address, <a href={`mailto:${links.emailSchool}`}>{links.emailSchool}</a>.</p>
     </div>
 
     <h2 class="text-2xl font-semibold mt-14">Skills</h2>

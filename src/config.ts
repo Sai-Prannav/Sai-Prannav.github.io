@@ -12,15 +12,14 @@ export const site = {
 
 export const links = {
   github: 'https://github.com/Sai-Prannav',
-  linkedin: 'https://www.linkedin.com/in/sai-prannav-murali-351218296/',
-  // TODO(Prannav): set your contact address here (kept out of the scaffold on purpose).
-  email: 'you@example.com',
+  linkedin: 'https://www.linkedin.com/in/saiprannavmurali/',
+  // Primary contact (personal); the school address is shown as a secondary option.
+  email: 'saiprannav29@gmail.com',
+  emailSchool: 'smurali1@students.kennesaw.edu',
   resume: '/resume.pdf',
-  // Project repos. PENDING: Prannav hasn't published these yet, so the URLs
-  // 404 until he does. Flip `published` to true once they're live; until then
-  // the site shows "repo coming soon" instead of a dead link.
+  // Project repos (published 2026-11-24).
   repos: {
-    published: false,
+    published: true,
     heartbridge: 'https://github.com/Sai-Prannav/heartbridge',
     stocksnap: 'https://github.com/Sai-Prannav/stocksnap',
   },
