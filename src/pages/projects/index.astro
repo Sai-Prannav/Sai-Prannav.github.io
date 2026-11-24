@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Projects" description="Case studies: HeartBridge and StockSnap.">
+  <div class="wrap pt-14">
+    <p class="mono">Projects</p>
+    <h1 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight">Things I've built</h1>
+    <div class="mt-10 grid gap-4 sm:grid-cols-2">
+      {projects.map((p) => (
+        <ProjectCard href={`/projects/${p.id}/`} title={p.data.title} context={p.data.context} summary={p.data.summary} stack={p.data.stack} status={p.data.status} />
+      ))}
+    </div>
+  </div>
+</Base>

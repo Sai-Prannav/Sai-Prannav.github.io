@@ -1,0 +1,2 @@
+Put the resume PDF here as public/resume.pdf (exact name). The site links to /resume.pdf.
+Delete this note once the PDF is in place.

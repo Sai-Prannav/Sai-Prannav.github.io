@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../config';
+---
+<Base title="Resume" description="Resume of Sai Prannav Murali (PDF).">
+  <div class="wrap pt-14">
+    <p class="mono">Resume</p>
+    <h1 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight">Resume</h1>
+    <p class="mt-3 muted max-w-xl">Here's my resume as a PDF. It covers my education, research, papers, internships and projects, and I keep it current.</p>
+    <p class="mt-6"><a class="btn btn-primary" href={links.resume}>Open the PDF</a></p>
+  </div>
+</Base>

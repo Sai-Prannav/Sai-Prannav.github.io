@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { skills } from '../config';
+---
+<Base title="About" description="Mechanical engineering student who builds robot hardware and the machine learning around it.">
+  <div class="wrap pt-14">
+    <p class="mono">About</p>
+    <h1 class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight">Hardware first, then the software around it</h1>
+
+    <div class="prose-site mt-8">
+      <p>I moved from India to the US when I was 15. I taught myself to code, mostly by building things until they worked, and that led to three AI and ML internships before I started college.</p>
+      <p>Now I'm studying mechanical engineering at Kennesaw State, because I wanted to work on the hardware side of robots too. My research covers a soft surgical robot, a fish robot, thermal imaging and drone sensing. Medical robotics is the subfield I'm leaning toward for now.</p>
+      <p>I'm looking for summer 2027 research in medical robotics, or anywhere hardware and learning meet. The email link in the footer is the quickest way to reach me.</p>
+    </div>
+
+    <h2 class="text-2xl font-semibold mt-14">Skills</h2>
+    <div class="mt-5 grid gap-4">
+      {skills.map((g) => (
+        <section class="card" aria-label={g.group}>
+          <h3 class="mono">{g.group}</h3>
+          <ul class="mt-3 flex flex-wrap gap-2">{g.items.map((i) => <li class="tag">{i}</li>)}</ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</Base>

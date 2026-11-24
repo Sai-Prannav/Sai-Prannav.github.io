@@ -1,0 +1,13 @@
+---
+interface Props { href: string; title: string; context: string; summary: string; stack: string[]; status?: string; }
+const { href, title, context, summary, stack, status } = Astro.props;
+---
+<a class="card" href={href}>
+  <p class="mono">{context}</p>
+  <h3 class="mt-1 text-lg font-semibold">{title}</h3>
+  <p class="mt-2 text-sm muted">{summary}</p>
+  <div class="mt-4 flex flex-wrap gap-2">
+    {status && <span class="tag tag-accent">{status}</span>}
+    {stack.slice(0, 5).map((s) => <span class="tag">{s}</span>)}
+  </div>
+</a>

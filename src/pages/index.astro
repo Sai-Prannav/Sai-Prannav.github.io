@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { now } from '../config';
+
+const projects = (await getCollection('projects')).filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order);
+const labs = (await getCollection('research')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base>
+  <Hero />
+
+  <section class="border-b border-[var(--line)]" aria-labelledby="now-h">
+    <div class="wrap py-6">
+      <h2 id="now-h" class="mono mb-3">Now</h2>
+      <ul class="grid gap-3 sm:grid-cols-3">
+        {now.map((n) => (
+          <li class="text-sm"><span class="tag tag-accent mr-2">{n.label}</span><span class="muted">{n.text}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="wrap pt-14" aria-labelledby="proj-h">
+    <div class="flex items-end justify-between mb-5">
+      <h2 id="proj-h" class="text-2xl font-semibold">Projects</h2>
+      <a href="/projects/" class="text-sm muted hover:text-[var(--fg)]">All projects</a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {projects.map((p) => (
+        <ProjectCard href={`/projects/${p.id}/`} title={p.data.title} context={p.data.context} summary={p.data.summary} stack={p.data.stack} status={p.data.status} />
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap pt-14" aria-labelledby="res-h">
+    <div class="flex items-end justify-between mb-5">
+      <h2 id="res-h" class="text-2xl font-semibold">Research</h2>
+      <a href="/research/" class="text-sm muted hover:text-[var(--fg)]">All labs</a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {labs.map((l) => (
+        <a class="card" href={`/research/#${l.id}`}>
+          <p class="mono">{l.data.period}</p>
+          <h3 class="mt-1 text-lg font-semibold">{l.data.lab}</h3>
+          <p class="mt-2 text-sm muted">{l.data.summary}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
