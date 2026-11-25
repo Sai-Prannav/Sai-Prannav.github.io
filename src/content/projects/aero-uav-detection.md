@@ -31,6 +31,9 @@ specs:
   - { k: Venue, v: 'AIAA SciTech Forum 2027, Orlando' }
   - { k: Authorship, v: 'Co-author, 3rd of 6' }
 credits: AERO Lab, Kennesaw State University. PI Dr. Adeel Khalid.
+figures:
+  - { kind: image, src: /media/photos/aero-drone-flight.jpg, alt: A quadcopter drone in flight against a blue sky with clouds, caption: 'Flight testing, AERO Lab.' }
+  - { kind: image, src: /media/photos/aero-drone-pad.jpg, alt: A quadcopter drone on a concrete pad before a test flight, caption: 'On the pad before a controlled test flight.' }
 ---
 ## The problem
 

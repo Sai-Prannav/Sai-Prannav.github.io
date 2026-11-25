@@ -48,13 +48,21 @@ const widgetMeta = {
       </div>
       <div>
         {d.withheld ? <Withheld ratio="3 / 2" />
-          : d.schematic ? (<RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." />)
           : d.card ? <Media {...d.card} ratio="3 / 2" eager />
+          : d.schematic ? (<RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." />)
           : <Media kind="image" src={`/media/${d.cardSlot ?? 'missing.png'}`} alt={d.title} ratio="3 / 2" eager />}
         {d.withheld && <p class="figcap">Images withheld until publication. No design detail is shown here.</p>}
         {d.card?.caption && <p class="figcap">{d.card.caption}</p>}
       </div>
     </header>
+
+    {d.schematic && d.card && (
+      <section class="mt-14" aria-labelledby="chain-h">
+        <h2 id="chain-h" class="text-xl font-bold">How the measurement chain works</h2>
+        <p class="mt-2 muted max-w-xl">Tap or hover a part to see its job.</p>
+        <div class="mt-4"><RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." /></div>
+      </section>
+    )}
 
     {(d.did.length > 0 || d.team.length > 0) && (
       <section class="mt-14" aria-labelledby="role-h">

@@ -11,10 +11,10 @@ const sw = new Set(['Python', 'PyTorch', 'FastAPI', 'React', 'TypeScript', 'SQLi
 <div class="rv h-full">
 <a class="pcard" href={`/projects/${id}/`} data-disc={d.disciplines.join(' ')}>
   <div class="relative">
-    {d.withheld ? <Withheld /> : d.schematic ? (
-      <div class="fig fig-contain" style="aspect-ratio:4 / 3"><Schematic prefix={`c${fig}`} hidden /></div>
-    ) : d.card ? (
+    {d.withheld ? <Withheld /> : d.card ? (
       <Media {...d.card} />
+    ) : d.schematic ? (
+      <div class="fig fig-contain" style="aspect-ratio:4 / 3"><Schematic prefix={`c${fig}`} hidden /></div>
     ) : (
       <Media kind="image" src={`/media/${d.cardSlot ?? 'missing.png'}`} alt={d.title} />
     )}

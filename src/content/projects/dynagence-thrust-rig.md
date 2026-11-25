@@ -12,6 +12,13 @@ status: Load-cell readout in progress
 statusWaiting: true
 stack: [3D printing, Aluminum profile, Load cells, HX711, Arduino]
 schematic: true
+card:
+  kind: image
+  src: /media/photos/dynagence-rig-assembled.jpg
+  alt: The thrust-test rig on a lab bench, an aluminum-profile frame and gantry over a glass aquarium tank
+  caption: The v1 rig, assembled. It has since been converted for the load-cell setup.
+figures:
+  - { kind: image, src: /media/photos/dynagence-rig-build.jpg, alt: 'Mid-build: aluminum-profile frame over the tank, with orange 3D-printed brackets laid out on the bench', caption: 'Mid-build: the frame going up, with the 3D-printed brackets laid out.' }
 widgets: [bistable]
 did:
   - I ran the print-versus-buy analysis for the rig parts.

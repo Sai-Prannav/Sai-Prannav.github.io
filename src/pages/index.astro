@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import HeroMedia from '../components/HeroMedia.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import BistableSnap from '../components/BistableSnap.astro';
+import RigInteractive from '../components/RigInteractive.astro';
 import TriageSim from '../components/TriageSim.astro';
 import StockSnapViewer from '../components/StockSnapViewer.astro';
 import { site, links, now, specStrip } from '../config';
@@ -60,9 +61,14 @@ const figNo = (p: any) => all.indexOf(p) + 2; // fig. 01 is the hero
   <section class="wrap pt-16" aria-labelledby="try-h">
     <p class="mono">Try it</p>
     <h2 id="try-h" class="text-2xl sm:text-3xl font-bold mt-1">The engineering, interactive</h2>
-    <p class="mt-2 max-w-xl muted">Three small models of real work. Each one is labeled with what it is and what it isn't.</p>
+    <p class="mt-2 max-w-xl muted">Small models of real work. Each one is labeled with what it is and what it isn't.</p>
 
     <div class="mt-8">
+      <h3 class="text-lg font-semibold">The rig's measurement chain <a href="/projects/dynagence-thrust-rig/" class="text-sm font-normal underline ml-2">DynaGence case study</a></h3>
+      <div class="mt-3"><RigInteractive prefix="home-rig" caption="Illustration of the signal chain. Not measured data." /></div>
+    </div>
+
+    <div class="mt-12">
       <h3 class="text-lg font-semibold">How the fish robot's drive snaps <a href="/projects/dynagence-thrust-rig/" class="text-sm font-normal underline ml-2">DynaGence case study</a></h3>
       <div class="mt-3"><BistableSnap compact prefix="home-bi" /></div>
     </div>
