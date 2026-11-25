@@ -7,7 +7,7 @@ order: 1
 featured: true
 kind: hardware
 disciplines: [Hardware, Research]
-role: Print-vs-buy analysis, ~15 printed parts, assembly, load-cell wiring.
+role: Print-vs-buy analysis, assembly of ~15 3D-printed parts, load-cell wiring.
 status: Readout in progress
 statusWaiting: true
 stack: [3D printing, Aluminum profile, Load cells, HX711, Arduino]
@@ -26,7 +26,7 @@ figures:
 widgets: [bistable]
 did:
   - I ran the print-versus-buy analysis for the rig parts.
-  - I fabricated and assembled the rig, about 15 3D-printed parts, and finished it in September 2026.
+  - I built and assembled the rig from about 15 3D-printed parts, and finished it in September 2026.
   - I'm wiring the load cells, HX711 amplifiers and Arduino into the measurement chain. That's what I'm on now.
 team:
   - The lab designs the fish robot and its bistable drive.
@@ -46,7 +46,7 @@ Thrust is a small force in a wet, fiddly setup. To measure it, I needed a fixtur
 
 ## The rig
 
-I ran the print-versus-buy analysis, then printed, built and assembled the mount and rig parts myself, about 15 parts in all. The robot hangs from a 3D-printed mount in a tank, and it pulls against a rod.
+I ran the print-versus-buy analysis, then built and assembled the mount and rig, about 15 3D-printed parts in all. The robot hangs from a 3D-printed mount in a tank, and it pulls against a rod.
 
 ## The measurement chain
 
