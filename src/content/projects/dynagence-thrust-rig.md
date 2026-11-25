@@ -12,12 +12,8 @@ status: Load-cell readout in progress
 statusWaiting: true
 stack: [3D printing, Aluminum profile, Load cells, HX711, Arduino]
 schematic: true
-card:
-  kind: image
-  src: /media/photos/dynagence-loadcell-mount.jpg
-  alt: A bar load cell bolted into an orange 3D-printed mount on the aluminum-profile frame, wired to an HX711 amplifier board on a breadboard
-  caption: Load cell in a 3D-printed mount on the rig frame, wired to an HX711 amplifier. Readout in progress.
 figures:
+  - { kind: image, src: /media/photos/dynagence-loadcell-mount.jpg, alt: 'A bar load cell bolted into an orange 3D-printed mount on the aluminum-profile frame, wired to an HX711 amplifier on a breadboard', caption: 'Load cell in a 3D-printed mount on the rig frame, wired to an HX711 amplifier. Readout in progress.' }
   - { kind: image, src: /media/photos/dynagence-rig-assembled.jpg, alt: 'The v1 rig assembled: aluminum-profile frame and gantry over a glass aquarium tank', caption: 'The v1 rig, assembled. It has since been converted for the load-cell setup.' }
   - { kind: image, src: /media/photos/dynagence-hx711-arduino.jpg, alt: 'Top-down view of load-cell wires running into two HX711 amplifier boards on a breadboard, connected to an Arduino Uno', caption: 'The signal chain on the bench: load-cell leads into HX711 amplifiers, then the Arduino.' }
   - { kind: image, src: /media/photos/dynagence-rig-build.jpg, alt: 'Mid-build: aluminum-profile frame over the tank, with orange 3D-printed brackets laid out on the bench', caption: 'Mid-build: the frame going up, with the 3D-printed brackets laid out.' }

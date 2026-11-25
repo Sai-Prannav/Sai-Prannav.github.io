@@ -52,10 +52,10 @@ export const heroMedia: {
   alt: string;
   caption: string;
 } = {
-  type: 'image',
-  src: '/media/photos/dynagence-rig-assembled.jpg',
-  alt: 'The thrust-test rig on a lab bench: a black aluminum-profile frame and gantry over a glass aquarium tank.',
-  caption: 'The v1 thrust-test rig I built at DynaGence Lab: aluminum-profile frame and gantry over the tank.',
+  type: 'schematic',
+  src: '',
+  alt: 'Interactive line drawing of the thrust-test rig: tank, aluminum-profile frame, 3D-printed mount holding a fish robot through load cells, wired to HX711 amplifiers and an Arduino.',
+  caption: 'Thrust-test rig, DynaGence Lab. Illustration of the signal chain. Not measured data.',
 };
 
 // Headshot for the About page. Leave src empty to show the placeholder frame.
