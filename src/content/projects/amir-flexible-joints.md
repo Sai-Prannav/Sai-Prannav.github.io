@@ -7,7 +7,7 @@ order: 2
 featured: true
 kind: hardware
 disciplines: [Hardware, Research]
-role: Fabricating and integrating the joints.
+role: 'Fabricating the flexible joints: 8 of 12 done, 4 in progress.'
 status: In progress
 statusWaiting: true
 stack: [SolidWorks, Fabrication, Soft robotics, Bench assembly]
@@ -17,7 +17,7 @@ proof: # NIH-funded project: the grant record, not the design
   - { label: 'KSU news: NIH award', href: 'https://www.kennesaw.edu/news/stories/2022/awarded-nih-grant-to-improve-heart-surgeries-through-use-of-robots.php' }
 did:
   - I led the joint redesign on the previous iteration.
-  - I'm fabricating and integrating the same joint design for the next hardware revision.
+  - I've fabricated 8 of 12 flexible joints across two builds by laser cutting and heat pressing. Four more are in progress, and I integrate each one as it's done.
   - I do SolidWorks CAD for test fixtures.
   - I helped build the bench platform.
 team:
@@ -28,6 +28,8 @@ specs:
   - { k: Application, v: 'Transcatheter cardiac intervention' }
   - { k: Funding, v: NIH }
   - { k: My work, v: 'Joint fabrication and integration, CAD for fixtures' }
+  - { k: Joints, v: '8 of 12 fabricated, 4 in progress' }
+  - { k: Process, v: 'Laser cutting, heat pressing' }
   - { k: Design detail, v: Withheld until publication }
 credits: AMIR Lab, Kennesaw State University. PI Dr. Amir Ali Amiri Moghadam.
 ---
@@ -37,7 +39,7 @@ The last iteration got built, but its catheters weren't accurate enough to contr
 
 ## My part
 
-Manufacturing. The joint design carries over from the last iteration, so I'm making the joints and connecting them to the new catheter assembly. I don't need to design anything new.
+Manufacturing. The joint design carries over from the last iteration, so I'm making the joints and connecting them to the new catheter assembly. I don't need to design anything new. So far that's 8 of 12 joints, laser-cut and heat-pressed, with 4 in progress.
 
 ## What's shown here
 
@@ -45,4 +47,4 @@ Nothing from the device. The design's protected until publication, so there are 
 
 ## Where it stands
 
-My joints are in progress, and the lab's next experiment waits on the revised hardware.
+Eight of my twelve joints are done and four are in progress, and the lab's next experiment waits on the revised hardware.

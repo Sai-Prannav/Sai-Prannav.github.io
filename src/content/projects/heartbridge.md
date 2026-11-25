@@ -24,7 +24,8 @@ specs:
   - { k: Triage, v: 'Deterministic rules: GREEN / YELLOW / RED' }
   - { k: LLM's job, v: 'Language only, never the decision' }
   - { k: Backend tests, v: '1,207 passing (1,213 total, 6 todo)' }
-  - { k: Rule evaluation, v: 'Caught 41% of emergencies phrased unexpectedly; 54% with a local model added' }
+  - { k: Languages, v: '5 (English, Spanish, Vietnamese, Hindi, Chinese)' }
+  - { k: My evaluation, v: 'Rules alone caught 40.8% of out-of-design emergencies (169/414); 53.9% with a local model' }
   - { k: Status, v: 'Hackathon prototype, not clinical software' }
 figures:
   - { kind: image, src: /media/heartbridge/heartbridge-dashboard.png, alt: The nurse worklist with a red alert and demo patients, caption: 'Nurse worklist (demo data).' }
@@ -48,7 +49,7 @@ I built the core engine at HackGT 13 at Georgia Tech in September 2026. It's got
 
 ## What testing showed
 
-The repo's own evaluation tried emergencies phrased in ways the rules weren't designed for. They caught 41%, and 54% with a local model added. That gap is why I'm doing v2, and it's what I'm testing against.
+I ran an independent evaluation: 873 synthetic messages in 5 languages, with emergencies phrased in ways the rules weren't designed for. The rules alone caught 40.8% (169 of 414), and 53.9% with a local model added. The test set is AI-generated and no clinician reviewed it, so treat it as a stress test, not a clinical result. That gap is why I'm doing v2, and it's what I'm testing against.
 
 ## v2
 

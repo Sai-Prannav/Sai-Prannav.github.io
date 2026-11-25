@@ -1,6 +1,6 @@
 ---
 title: StockSnap
-summary: An inventory app that counts the products in a photo of a shelf.
+summary: An inventory app that detects and counts items in a shelf photo with a pretrained YOLO11 model.
 context: Built at a hackathon
 date: Mar to Apr 2026
 order: 6
@@ -24,6 +24,7 @@ card:
 specs:
   - { k: Detector, v: YOLO11 }
   - { k: Backend, v: 'FastAPI, SQLite' }
+  - { k: API, v: '17 REST endpoints, 3 tables (stores, products, scans)' }
   - { k: Frontend, v: 'React, TypeScript' }
   - { k: Demo result, v: '53 detections at 75.0% mean confidence' }
 figures:

@@ -19,7 +19,7 @@ card:
 proof: [] # SciTech: add the public program listing here once it exists
 did:
   - I built a data-processing application for the raw LiDAR data.
-  - I built a data-labeling application.
+  - I built a data-labeling application and hand-labeled 530 LiDAR clusters with it (307 UAV, 223 non-UAV).
   - I trained the detector.
   - I ran the controlled flight experiments for the sensor poster, comparing LiDAR, RGB and thermal sensing across drone size, altitude and range.
 team:
@@ -29,6 +29,7 @@ specs:
   - { k: Task, v: 'Detecting and tracking intruder UAVs' }
   - { k: Sensors, v: 'LiDAR and thermal imagery' }
   - { k: Method, v: 'Deep-learning detection model' }
+  - { k: Labeled data, v: '530 LiDAR clusters, hand-labeled (307 UAV / 223 non-UAV)' }
   - { k: Venue, v: 'AIAA SciTech Forum 2027, Orlando' }
   - { k: Authorship, v: 'Co-author, 3rd of 6' }
 credits: AERO Lab, Kennesaw State University. PI Dr. Adeel Khalid.
@@ -43,7 +44,7 @@ The raw LiDAR data was unusable as recorded, and it had no labels. Dead end. I c
 
 ## What I built
 
-I built three tools. My data-processing app turns the raw LiDAR into something a model can read. My labeling app lets us annotate it. Then I trained the detection model on the result.
+I built three tools. My data-processing app turns the raw LiDAR into something a model can read. My labeling app lets us annotate it, and I hand-labeled 530 clusters with it. Then I trained the detection model on the result.
 
 ## The sensing side
 
