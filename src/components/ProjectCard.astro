@@ -12,7 +12,7 @@ const sw = new Set(['Python', 'PyTorch', 'FastAPI', 'React', 'TypeScript', 'SQLi
 <div class="rv h-full">
 <div class="pcard" data-disc={d.disciplines.join(' ')}>
   <div class="relative">
-    {d.withheld ? <Withheld /> : d.card ? (
+    {d.withheld ? <Withheld title={d.withheldNote?.title} sub={d.withheldNote?.sub} /> : d.card ? (
       <Media {...d.card} />
     ) : d.schematic ? (
       <div class="fig fig-contain" style="aspect-ratio:4 / 3"><Schematic prefix={`c${fig}`} hidden /></div>

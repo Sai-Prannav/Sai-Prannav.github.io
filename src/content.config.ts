@@ -46,6 +46,7 @@ const projects = defineCollection({
     figures: z.array(media).default([]),
     figureSlots: z.array(z.string()).default([]), // file names for empty figure frames
     withheld: z.boolean().default(false), // AMIR: images withheld until publication
+    withheldNote: z.object({ title: z.string(), sub: z.string(), caption: z.string() }).optional(),
     schematic: z.boolean().default(false), // use the rig schematic as the card and case-study figure
     widgets: z.array(z.enum(['bistable', 'triage', 'stocksnap'])).default([]), // interactive sections on the case study
     proof: z.array(proofLink).default([]), // extra proof chips; poster links come from `posters`

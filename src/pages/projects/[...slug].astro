@@ -49,11 +49,11 @@ const widgetMeta = {
         )}
       </div>
       <div>
-        {d.withheld ? <Withheld ratio="4 / 3" />
+        {d.withheld ? <Withheld ratio="4 / 3" title={d.withheldNote?.title} sub={d.withheldNote?.sub} />
           : d.schematic ? (<RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." />)
           : d.card ? <Media {...d.card} ratio="4 / 3" eager />
           : <Media kind="image" src={`/media/${d.cardSlot ?? 'missing.png'}`} alt={d.title} ratio="3 / 2" eager />}
-        {d.withheld && <p class="figcap">Images withheld until publication. No design detail is shown here.</p>}
+        {d.withheld && <p class="figcap">{d.withheldNote?.caption ?? 'Images withheld until publication. No design detail is shown here.'}</p>}
         {!d.schematic && d.card?.caption && <p class="figcap">{d.card.caption}</p>}
       </div>
     </header>
