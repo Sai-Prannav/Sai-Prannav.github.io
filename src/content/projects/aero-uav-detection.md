@@ -32,6 +32,8 @@ specs:
   - { k: Authorship, v: 'Co-author, 3rd of 6' }
 credits: AERO Lab, Kennesaw State University. PI Dr. Adeel Khalid.
 figures:
+  - { kind: image, src: /media/intruas/intruas-clusters.png, alt: 'IntrUAS evaluation view: raw LiDAR points on the left, clustered points with predicted UAV boxes on the right, and a predictions panel', caption: 'IntrUAS, the LiDAR labeling and evaluation tool from the SciTech work. Raw point cloud on the left, clusters and predictions on the right. The red box is a real false positive.' }
+  - { kind: image, src: /media/intruas/intruas-uav.png, alt: 'IntrUAS evaluation view with a single cluster correctly classified as a UAV', caption: 'A single cluster correctly classified as a UAV.' }
   - { kind: image, src: /media/photos/aero-drone-flight.jpg, alt: A quadcopter drone in flight against a blue sky with clouds, caption: 'Flight testing, AERO Lab.' }
   - { kind: image, src: /media/photos/aero-drone-pad.jpg, alt: A quadcopter drone on a concrete pad before a test flight, caption: 'On the pad before a controlled test flight.' }
 ---
