@@ -12,6 +12,9 @@ status: In progress
 statusWaiting: true
 stack: [SolidWorks, Fabrication, Soft robotics, Bench assembly]
 withheld: true
+proof: # NIH-funded project: the grant record, not the design
+  - { label: 'NIH grant (RePORTER)', href: 'https://reporter.nih.gov/project-details/10439264' }
+  - { label: 'KSU news: NIH award', href: 'https://www.kennesaw.edu/news/stories/2022/awarded-nih-grant-to-improve-heart-surgeries-through-use-of-robots.php' }
 did:
   - I led the joint redesign on the previous iteration.
   - I'm fabricating and integrating the same joint design for the next hardware revision.

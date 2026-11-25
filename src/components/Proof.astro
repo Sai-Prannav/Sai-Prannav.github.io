@@ -1,0 +1,22 @@
+---
+// "Proof" chips: small links to public sources that back a project up.
+// Items come from the poster links in config plus a project's own `proof` list.
+import { links, posterShort } from '../config';
+interface Props { posters?: string[]; proof?: { label: string; href: string }[]; compact?: boolean; }
+const { posters = [], proof = [], compact = false } = Astro.props;
+const items = [
+  ...posters.map((k) => ({ label: (posterShort as any)[k], href: (links.posters as any)[k] })),
+  ...proof,
+];
+---
+{items.length > 0 && (
+  <div class:list={['proof', compact && 'proof-c']}>
+    <span class="proof-k">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>
+      Proof
+    </span>
+    {items.map((i) => (
+      <a class="proof-a" href={i.href} target="_blank" rel="noopener">{i.label}<span aria-hidden="true"> ↗</span></a>
+    ))}
+  </div>
+)}

@@ -83,6 +83,12 @@ export const linkLabels = {
   pedestrian: 'Poster: pedestrian identification with drones (KSU Digital Commons)',
 } as const;
 
+export const posterShort = {
+  smarterSignals: 'Poster: Smarter Signals',
+  uavSensors: 'Poster: UAV sensors',
+  pedestrian: 'Poster: pedestrian ID',
+} as const;
+
 export const skills = [
   {
     group: 'Mechanical & Fabrication',

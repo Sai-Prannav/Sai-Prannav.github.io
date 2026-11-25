@@ -2,6 +2,7 @@
 import Media from './Media.astro';
 import Withheld from './Withheld.astro';
 import Schematic from './Schematic.astro';
+import Proof from './Proof.astro';
 interface Props { p: any; id: string; fig: number; }
 const { p, id, fig } = Astro.props;
 const d = p.data;
@@ -9,7 +10,7 @@ const d = p.data;
 const sw = new Set(['Python', 'PyTorch', 'FastAPI', 'React', 'TypeScript', 'SQLite', 'YOLO11', 'Telegram', 'LLM', 'Rule-based triage', 'Deep learning', 'Machine learning', 'MATLAB']);
 ---
 <div class="rv h-full">
-<a class="pcard" href={`/projects/${id}/`} data-disc={d.disciplines.join(' ')}>
+<div class="pcard" data-disc={d.disciplines.join(' ')}>
   <div class="relative">
     {d.withheld ? <Withheld /> : d.card ? (
       <Media {...d.card} />
@@ -25,13 +26,14 @@ const sw = new Set(['Python', 'PyTorch', 'FastAPI', 'React', 'TypeScript', 'SQLi
       <span class="mono-n whitespace-nowrap">fig. {String(fig).padStart(2, '0')}</span>
       <span class:list={['chip', d.statusWaiting && 'chip-wait']}>{d.status}</span>
     </div>
-    <h3 class="mt-2 text-lg font-semibold leading-snug"><span>{d.title}</span></h3>
+    <h3 class="mt-2 text-lg font-semibold leading-snug"><a class="stretch" href={`/projects/${id}/`}><span>{d.title}</span></a></h3>
     <p class="mono-n mt-1">{d.context} · {d.date}</p>
     <p class="mt-2 text-sm">{d.summary}</p>
     <p class="mt-3 text-sm"><span class="mono">My role</span> <span class="block">{d.role}</span></p>
     <p class="mt-auto pt-4 flex flex-wrap gap-1.5">
       {d.stack.slice(0, 6).map((s: string) => <span class:list={['tag', sw.has(s) && 'tag-sw']}>{s}</span>)}
     </p>
+    {(d.posters.length > 0 || d.proof.length > 0) && <div class="mt-3 pt-3 border-t border-[var(--rule)]"><Proof posters={d.posters} proof={d.proof} compact /></div>}
   </div>
-</a>
+</div>
 </div>

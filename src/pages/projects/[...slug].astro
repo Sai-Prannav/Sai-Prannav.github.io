@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Media from '../../components/Media.astro';
 import Withheld from '../../components/Withheld.astro';
+import Proof from '../../components/Proof.astro';
 import RigInteractive from '../../components/RigInteractive.astro';
 import BistableSnap from '../../components/BistableSnap.astro';
 import TriageSim from '../../components/TriageSim.astro';
@@ -17,9 +18,10 @@ const { p } = Astro.props;
 const { Content } = await render(p);
 const d = p.data;
 const repoUrl = d.repo ? links.repos[d.repo] : undefined;
-const hasLinks = (repoUrl && links.repos.published) || d.posters.length > 0;
+const hasLinks = repoUrl && links.repos.published;
 const figs = d.figures.map((f) => ({ ...f }));
 const slots = d.figureSlots;
+const lead = (i: number) => i === 0 && figs.length > 1 && figs.length % 2 === 1;
 const widgetMeta = {
   bistable: ['Why the drive snaps', 'The fish robot is driven by a bistable "hair-clip" mechanism: two stable shapes with an energy barrier between them. Drag the strip past the barrier and it snaps.'],
   triage: ['Try the rules', "HeartBridge's real thresholds, ported to the browser. Move the sliders and the tier and its reasons update, the same way they do for a nurse."],
@@ -39,30 +41,22 @@ const widgetMeta = {
           <span class:list={['chip', d.statusWaiting && 'chip-wait']}>{d.status}</span>
           {d.stack.map((s) => <span class="tag">{s}</span>)}
         </p>
+        {(d.posters.length > 0 || d.proof.length > 0) && <div class="mt-5"><Proof posters={d.posters} proof={d.proof} /></div>}
         {hasLinks && (
           <p class="mt-5 flex flex-wrap gap-3">
             {repoUrl && links.repos.published && <a class="btn" href={repoUrl} rel="noopener">View the repo</a>}
-            {d.posters.map((k) => <a class="btn" href={links.posters[k]} rel="noopener">{linkLabels[k]}</a>)}
           </p>
         )}
       </div>
       <div>
-        {d.withheld ? <Withheld ratio="3 / 2" />
-          : d.card ? <Media {...d.card} ratio="3 / 2" eager />
+        {d.withheld ? <Withheld ratio="4 / 3" />
           : d.schematic ? (<RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." />)
+          : d.card ? <Media {...d.card} ratio="4 / 3" eager />
           : <Media kind="image" src={`/media/${d.cardSlot ?? 'missing.png'}`} alt={d.title} ratio="3 / 2" eager />}
         {d.withheld && <p class="figcap">Images withheld until publication. No design detail is shown here.</p>}
-        {d.card?.caption && <p class="figcap">{d.card.caption}</p>}
+        {!d.schematic && d.card?.caption && <p class="figcap">{d.card.caption}</p>}
       </div>
     </header>
-
-    {d.schematic && d.card && (
-      <section class="mt-14" aria-labelledby="chain-h">
-        <h2 id="chain-h" class="text-xl font-bold">How the measurement chain works</h2>
-        <p class="mt-2 muted max-w-xl">Tap or hover a part to see its job.</p>
-        <div class="mt-4"><RigInteractive prefix="cs" caption="Illustration of the signal chain. Not measured data, and not the exact bench." /></div>
-      </section>
-    )}
 
     {(d.did.length > 0 || d.team.length > 0) && (
       <section class="mt-14" aria-labelledby="role-h">
@@ -108,10 +102,10 @@ const widgetMeta = {
     {(figs.length > 0 || slots.length > 0) && (
       <section class="mt-14" aria-labelledby="figs-h">
         <h2 id="figs-h" class="text-xl font-bold">Figures</h2>
-        <div class="mt-4 grid gap-6 sm:grid-cols-2">
+        <div class:list={['mt-4 grid gap-6', figs.length + slots.length > 1 && 'sm:grid-cols-2']}>
           {figs.map((f, i) => (
-            <figure>
-              <Media {...f} ratio="4 / 3" contain />
+            <figure class:list={[lead(i) && 'sm:col-span-2']}>
+              <Media {...f} ratio={f.ratio ?? (lead(i) ? '16 / 9' : '4 / 3')} fit={f.fit ?? 'contain'} />
               <figcaption class="figcap"><span class="text-[var(--accent-ink)]">fig. {String(i + 2).padStart(2, '0')}</span> {f.caption ?? f.alt}</figcaption>
             </figure>
           ))}

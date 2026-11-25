@@ -2,12 +2,20 @@
 interface Props { ratio?: string; }
 const { ratio = '4 / 3' } = Astro.props;
 ---
-<div class="fig" style={`aspect-ratio:${ratio}`}>
-  <div class="withheld" role="img" aria-label="Images withheld until publication">
-    <div>
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="mx-auto mb-2"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-      <p class="mono">Images withheld</p>
-      <p class="mono-n mt-1">until publication</p>
+<div class="fig wh-fig" style={`aspect-ratio:${ratio}`}>
+  <div class="wh" role="img" aria-label="Images withheld until publication">
+    <svg class="wh-rings" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="1">
+        <circle cx="200" cy="150" r="46"/><circle cx="200" cy="150" r="86"/><circle cx="200" cy="150" r="128"/><circle cx="200" cy="150" r="172"/><circle cx="200" cy="150" r="220"/>
+        <path d="M200 0V300M0 150H400" stroke-dasharray="2 6"/>
+      </g>
+    </svg>
+    <div class="wh-in">
+      <span class="wh-lock">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      </span>
+      <p class="wh-t">Design withheld</p>
+      <p class="wh-s">Protected until publication</p>
     </div>
   </div>
 </div>

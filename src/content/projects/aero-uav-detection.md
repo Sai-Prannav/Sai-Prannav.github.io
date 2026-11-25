@@ -7,15 +7,16 @@ order: 3
 featured: true
 kind: research
 disciplines: [Research, Software]
-role: "Owned the ML: data-processing app, labeling app, detection model."
+role: "ML pipeline: LiDAR data processing, labeling tool, trained detection model."
 status: Accepted, SciTech 2027
 stack: [LiDAR, Thermal imaging, Sensor fusion, Deep learning, Python]
 posters: [uavSensors, smarterSignals, pedestrian]
 card:
   kind: image
-  src: /media/posters/aero-uav-figure.png
-  alt: Thermal camera frame of a drone in the sky with a detection box labeled aircraft 0.75
-  caption: 'Thermal frame with a detection, from the poster "Evaluation of LiDAR, RGB, and Thermal Sensors for UAV Detection" (KSU Symposium of Student Scholars, Spring 2026). I''m a co-author.'
+  src: /media/cards/aero-card.webp
+  alt: Left, a quadcopter drone in flight against clouds. Right, a false-color thermal frame of a drone in the sky with a detection box labeled aircraft 0.75
+  caption: 'Left, a flight-test photo (cropped, color-graded). Right, a thermal frame with the detector''s "aircraft 0.75" box, from the poster "Evaluation of LiDAR, RGB, and Thermal Sensors for UAV Detection" (KSU Undergraduate Symposium, Spring 2026). The thermal frame is cropped and scaled only. I''m a co-author.'
+proof: [] # SciTech: add the public program listing here once it exists
 did:
   - I built a data-processing application for the raw LiDAR data.
   - I built a data-labeling application.
@@ -33,9 +34,8 @@ specs:
 credits: AERO Lab, Kennesaw State University. PI Dr. Adeel Khalid.
 figures:
   - { kind: image, src: /media/intruas/intruas-clusters.png, alt: 'IntrUAS evaluation view: raw LiDAR points on the left, clustered points with predicted UAV boxes on the right, and a predictions panel', caption: 'IntrUAS, the LiDAR labeling and evaluation tool from the SciTech work. Raw point cloud on the left, clusters and predictions on the right. The red box is a real false positive.' }
-  - { kind: image, src: /media/intruas/intruas-uav.png, alt: 'IntrUAS evaluation view with a single cluster correctly classified as a UAV', caption: 'A single cluster correctly classified as a UAV.' }
-  - { kind: image, src: /media/photos/aero-drone-flight.jpg, alt: A quadcopter drone in flight against a blue sky with clouds, caption: 'Flight testing, AERO Lab.' }
-  - { kind: image, src: /media/photos/aero-drone-pad.jpg, alt: A quadcopter drone on a concrete pad before a test flight, caption: 'On the pad before a controlled test flight.' }
+  - { kind: image, src: /media/posters/uav-sensors-lidar-point-cloud.png, alt: 'A LiDAR point cloud rendered as black rings and points on white, with a small red marker for the drone', caption: 'A LiDAR scan with the drone marked in red. From the poster "Evaluation of LiDAR, RGB, and Thermal Sensors for UAV Detection" (Spring 2026).' }
+  - { kind: image, fit: cover, pos: '50% 62%', src: /media/cards/aero-drone-flight-g.webp, alt: A quadcopter drone in flight against a blue sky with clouds, caption: 'The quadcopter in a flight test, AERO Lab. Photo; cropped and color-graded.' }
 ---
 ## The problem
 

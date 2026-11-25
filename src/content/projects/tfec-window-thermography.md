@@ -7,10 +7,18 @@ order: 4
 featured: true
 kind: research
 disciplines: [Research, Software]
-role: Helped develop and test the algorithms, collected the data.
+role: Developed and tested the algorithms; collected the data.
 status: Accepted, TFEC 2027
 stack: [Infrared thermography, Heat transfer, Machine learning]
-cardSlot: posters/tfec-window-figure.png
+card:
+  kind: image
+  src: /media/cards/tfec-card.webp
+  alt: Two exterior FLIR infrared views of a window, shown side by side on a neutral ground
+  caption: 'Both panels of Fig. 1 from the paper: exterior FLIR thermal views of a window. Qualitative only; panels are scaled, not altered.'
+proof:
+  - { label: 'TFEC 2027 (paper accepted)', href: 'https://www.astfe.org/tfec2027/' }
+figures:
+  - { kind: image, ratio: '1600 / 614', src: /media/tfec/tfec-fig1-full-with-caption.webp, alt: 'Figure 1 as printed in the paper: two FLIR thermal views of a window, with the paper''s caption', caption: 'Fig. 1 as printed in the paper, with its own caption. Representative exterior FLIR screenshots, used for qualitative interpretation only. TFEC 2027 paper (preliminary framework).' }
 did:
   - I helped develop the algorithms.
   - I helped test them.

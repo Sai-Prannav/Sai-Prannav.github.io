@@ -10,7 +10,13 @@ const media = z.object({
   poster: z.string().optional(), // still frame for video (shown first, and for reduced motion)
   alt: z.string(),
   caption: z.string().optional(),
+  fit: z.enum(['cover', 'contain']).optional(),
+  ratio: z.string().optional(),
+  pos: z.string().optional(), // object-position for cover crops
 });
+
+// A verified public link that backs a project up. Leave empty until a real URL exists.
+const proofLink = z.object({ label: z.string(), href: z.string().url() });
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
@@ -42,6 +48,7 @@ const projects = defineCollection({
     withheld: z.boolean().default(false), // AMIR: images withheld until publication
     schematic: z.boolean().default(false), // use the rig schematic as the card and case-study figure
     widgets: z.array(z.enum(['bistable', 'triage', 'stocksnap'])).default([]), // interactive sections on the case study
+    proof: z.array(proofLink).default([]), // extra proof chips; poster links come from `posters`
     badge: z.object({ n: z.number(), label: z.string() }).optional(), // count-up chip on the card
   }),
 });

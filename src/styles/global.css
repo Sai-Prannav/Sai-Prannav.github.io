@@ -189,3 +189,22 @@ kbd { font-family: var(--font-mono); font-size: .68rem; color: var(--muted); }
 .widget > p.lead { max-width: 40rem; margin-top: .4rem; }
 .widget figure { margin-top: 1.1rem; }
 .bi-title { text-transform: none; letter-spacing: 0; }
+
+/* ---------- Proof chips ---------- */
+.proof { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .45rem; position: relative; z-index: 2; }
+.proof-k { display: inline-flex; align-items: center; gap: .3rem; font-family: var(--font-mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-ink); margin-right: .15rem; }
+.proof-a { font-family: var(--font-mono); font-size: .7rem; border: 1px solid var(--rule); border-radius: 999px; padding: .15rem .6rem; color: var(--ink); background: var(--surface); transition: border-color .15s, background .15s, color .15s; }
+.proof-a:hover { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.proof-c .proof-a { font-size: .66rem; padding: .1rem .5rem; }
+
+/* ---------- Withheld (AMIR) ---------- */
+.wh-fig { border-color: #0f1d26; background: #0f1d26; }
+.wh { position: relative; height: 100%; width: 100%; display: grid; place-items: center; text-align: center; color: #cdd8df;
+  background: radial-gradient(120% 90% at 50% 0%, #2c4656 0%, #1a2e3a 55%, #0f1d26 100%); }
+.wh-rings { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(205,216,223,.13); }
+.wh-in { position: relative; padding: 1rem; }
+.wh-lock { display: inline-grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 50%; border: 1px solid rgba(205,216,223,.4); background: rgba(15,29,38,.55); color: #fff; }
+.wh-t { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; letter-spacing: -.01em; color: #fff; margin-top: .75rem; }
+.wh-s { font-family: var(--font-mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(205,216,223,.75); margin-top: .25rem; }
+.stretch::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.pcard { position: relative; }
