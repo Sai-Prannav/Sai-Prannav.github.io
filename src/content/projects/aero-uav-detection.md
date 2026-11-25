@@ -24,6 +24,7 @@ did:
   - I ran the controlled flight experiments for the sensor poster, comparing LiDAR, RGB and thermal sensing across drone size, altitude and range.
 team:
   - Other authors ran the wider project, and I'm co-author, 3rd of 6.
+  - Daniel Byers and I built the IntrUAS tooling together. The repo's commits are under his account.
   - Owais Ahmed's the presenting author, so I won't be the one at the podium.
 specs:
   - { k: Task, v: 'Detecting and tracking intruder UAVs' }
