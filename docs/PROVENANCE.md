@@ -6,7 +6,7 @@ by hand with no record of where they came from.)
 
 | Page | Claim | Public source | How to re-check |
 |---|---|---|---|
-| HeartBridge | 1,207 backend tests passing (1,213 total, 6 todo) | [heartbridge](https://github.com/Sai-Prannav/heartbridge) `ci` workflow and README | `npm test` in `heartbridge/backend`, or the latest `ci` run |
+| HeartBridge | 1,214 backend tests passing (0 todo; the six open bugs were fixed 2026-11-26) | [heartbridge](https://github.com/Sai-Prannav/heartbridge) `ci` workflow and README | `npm test` in `heartbridge/backend`, or the latest `ci` run |
 | HeartBridge | Rules alone caught 40.8% of out-of-design emergencies (169/414); 53.9% with a local model | heartbridge [`docs/independent-eval/REPORT.md`](https://github.com/Sai-Prannav/heartbridge/blob/main/docs/independent-eval/REPORT.md) | the REPORT's results table; the repo's offline recall check fails CI below 40.8% |
 | HeartBridge | 873 synthetic messages in 5 languages | same REPORT ("Working, 873 messages") | same |
 | HeartBridge | Built at HackGT 13 (Georgia Tech), September 2026 | the repo's history and README | `git log --reverse` in the repo |

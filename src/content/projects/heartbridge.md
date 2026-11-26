@@ -23,7 +23,7 @@ card:
 specs:
   - { k: Triage, v: 'Deterministic rules: GREEN / YELLOW / RED' }
   - { k: LLM's job, v: 'Language only, never the decision' }
-  - { k: Backend tests, v: '1,207 passing (1,213 total, 6 todo)' }
+  - { k: Backend tests, v: '1,214 passing (0 todo)' }
   - { k: Languages, v: '5 (English, Spanish, Vietnamese, Hindi, Chinese)' }
   - { k: AI-assisted evaluation, v: 'Rules alone caught 40.8% of out-of-design emergencies (169/414); 53.9% with a local model' }
   - { k: Status, v: 'Hackathon prototype, not clinical software' }
