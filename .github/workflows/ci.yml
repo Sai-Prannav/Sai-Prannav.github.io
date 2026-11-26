@@ -1,0 +1,26 @@
+# Every pull request and every push to main: the site builds, every internal link and asset resolves, and the link
+# checker's own tests pass. (Deploy is a separate workflow; privacy.yml scans for local paths and secrets.)
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npm run check:links
+      - run: npm audit --omit=dev --audit-level=moderate
