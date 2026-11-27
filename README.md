@@ -1,36 +1,29 @@
-# Portfolio website
+# Sai Prannav Murali: portfolio site
 
-Astro (static), Tailwind v4, TypeScript. Target: `https://sai-prannav.github.io` on GitHub Pages.
+Live at **https://sai-prannav.github.io**. Astro 7 (static), Tailwind v4, TypeScript, deployed to GitHub Pages.
 
 ```
-npm install
-npm run dev      # http://localhost:4321
-npm run build    # outputs dist/
+npm ci
+npm run dev           # http://localhost:4321
+npm run build         # static site in dist/
+npm test              # tests for the link checker
+npm run check:links   # after a build: every internal link and asset in dist/ resolves
 ```
 
-## Edit content
+Node 22 (≥ 22.23.4, see `.nvmrc`; Astro 7 refuses older versions).
 
-- All links and identity strings: `src/config.ts` (GitHub, LinkedIn, email, resume path, repo URLs, hero media, spec strip, "now" block, skills).
-- Add a project or case study: new `.md` file in `src/content/projects/`. Copy `dynagence-thrust-rig.md`.
-- Add a lab or paper: `src/content/research/`.
-- Visual slots: see `VISUALS_NEEDED.md`.
+## Where things live
 
-## Before first deploy (TODO)
+- Identity, links, resume path, repo URLs, hero media, skills: `src/config.ts`.
+- Projects and case studies: one Markdown file each in `src/content/projects/` (copy `dynagence-thrust-rig.md`).
+- Labs and papers: `src/content/research/`.
+- Media: `public/media/` (each folder's `MANIFEST.md` says where every file came from).
+- Where each number on the site comes from: [docs/PROVENANCE.md](docs/PROVENANCE.md). Update it with the number.
 
-1. Set your real email in `src/config.ts` (`links.email`). It's a placeholder on purpose.
-2. Drop the resume at `public/resume.pdf` and delete `public/resume.PLACEHOLDER.txt`.
-3. When the HeartBridge and StockSnap repos are public, set `repos.published` to `true` in `src/config.ts`.
+## Checks
 
-## Deploy (GitHub Pages, user site)
-
-1. On GitHub, create a repo named exactly `Sai-Prannav.github.io` (public).
-2. In this folder:
-   ```
-   git branch -M main
-   git remote add origin https://github.com/Sai-Prannav/Sai-Prannav.github.io.git
-   git push -u origin main
-   ```
-3. In the repo: Settings, Pages, Source: **GitHub Actions**.
-4. The `Deploy to GitHub Pages` workflow runs on push. The site appears at https://sai-prannav.github.io.
-
-The output is plain static files, so moving to Cloudflare Pages or Netlify later only needs the build command `npm run build` and the output directory `dist`.
+| Workflow | When | What |
+|---|---|---|
+| `ci.yml` | every PR and push to `main` | build, link check, link-checker tests, `npm audit` (moderate+) |
+| `privacy.yml` | every PR and push to `main` | no local machine paths, secret tokens or local artifacts in the repo |
+| `deploy.yml` | push to `main` | build and publish to GitHub Pages |
